@@ -38,7 +38,7 @@ func (logger *logger) Fatal(format string, a ...interface{}) {
 	f := pterm.Fatal
 	f.Fatal = logger.DebugEnabled
 
-	pterm.Fatal.Printfln(format, a...)
+	f.Printfln(format, a...)
 	os.Exit(1)
 }
 
@@ -46,7 +46,7 @@ func (logger *logger) FatalNoExit(format string, a ...interface{}) {
 	f := pterm.Fatal
 	f.Fatal = false
 
-	pterm.Fatal.Printfln(format, a...)
+	f.Printfln(format, a...)
 }
 
 func (logger *logger) Info(format string, a ...interface{}) {
