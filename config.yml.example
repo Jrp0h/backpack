@@ -1,0 +1,32 @@
+data_path: test
+hash_path: test/prev_hash
+
+encryption:
+    type: aes
+    key: raw:thisis32bitlongpassphraseimusing
+    # key: file:test/key.txt
+    # key: base64:dGhpc2lzMzJiaXRsb25ncGFzc3BocmFzZWltdXNpbmc=
+
+actions:
+    move_to_tmp:
+        type: move
+        dir: /tmp/test
+
+    ftp_anonymous_default_port:
+        type: ftp
+        user: anonymous
+        host: 127.0.0.1
+        dir: /upload
+
+    ftp_anonymous:
+        type: ftp
+        user: anonymous
+        host: 127.0.0.1
+        port: 1029
+
+    ftp_userpass:
+        type: ftp
+        user: testuser
+        pass: passw0rd
+        host: 127.0.0.1
+        port: 1029

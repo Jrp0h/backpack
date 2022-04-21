@@ -1,0 +1,2 @@
+# So I can store sensitive information without leaking it through git
+config.yml
