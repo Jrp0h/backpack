@@ -83,10 +83,34 @@ func (actions *actionsConfig) Names() []string {
 	names := make([]string, len(*actions))
 
 	i := 0
-	for k, _ := range *actions {
+	for k := range *actions {
 		names[i] = k
 		i += 1
 	}
 
 	return names
+}
+
+func (actions *actionsConfig) OnlyOrExcept(only, except []string) actionsConfig {
+	if len(only) > 0 && len(except) > 0 {
+		utils.Log.Fatal("config/actions: only and except can't be used together")
+	}
+
+	if len(only) > 0 {
+		o, err := actions.Only(only)
+		if err != nil {
+			utils.Log.Fatal(err.Error())
+		}
+		return o
+	}
+	if len(except) > 0 {
+		o, err := actions.Except(except)
+		if err != nil {
+			utils.Log.Fatal(err.Error())
+		}
+
+		return o
+	}
+
+	return *actions
 }

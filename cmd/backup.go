@@ -27,6 +27,7 @@ var (
 		Run: execWithConfig(func(cmd *cobra.Command, args []string, cfg *config.Config) {
 			cfg.Require(config.Path | config.Actions)
 			cfg.Validate(config.Path)
+			actions := cfg.Actions.OnlyOrExcept(only, except)
 
 			// Change Current Directory if CWD isn't empty
 			if cfg.CWD != "" {
@@ -60,15 +61,19 @@ var (
 			}
 
 			// Run Actions
-			// TODO: Accept only and except
+			if len(actions) == 0 {
+				utils.Log.Warning("No actions to run. Stopping")
+				return
+			}
+
 			wg := new(sync.WaitGroup)
 			m := new(sync.Mutex)
 			succeded := 0
 
-			p, _ := pterm.DefaultProgressbar.WithTotal(len(cfg.Actions)).WithTitle("Running actions").Start()
+			p, _ := pterm.DefaultProgressbar.WithTotal(len(actions)).WithTitle("Running actions").Start()
 			p.RemoveWhenDone = true
 
-			for k, v := range cfg.Actions {
+			for k, v := range actions {
 				wg.Add(1)
 				go runAction(&file, k, v, p, &succeded, wg, m)
 			}
@@ -77,12 +82,12 @@ var (
 
 			println()
 			switch {
-			case succeded == len(cfg.Actions):
+			case succeded == len(actions):
 				utils.Log.Success("All actions completed successfully")
 			case succeded == 0:
 				utils.Log.Error("All actions failed")
 			default:
-				utils.Log.Warning("%d/%d actions succeded", succeded, len(cfg.Actions))
+				utils.Log.Warning("%d/%d actions succeded", succeded, len(actions))
 			}
 		}),
 	}
@@ -91,6 +96,9 @@ var (
 func init() {
 	backupCmd.Flags().BoolVar(&bNoEncrypt, "no-encrypt", false, "Doesn't encrypt files")
 	backupCmd.Flags().BoolVar(&bForce, "force", false, "Force backup even if prev_hash is the same")
+
+	backupCmd.Flags().StringArrayVar(&only, "only", []string{}, "List of connections to try.")
+	backupCmd.Flags().StringArrayVar(&except, "except", []string{}, "List of connections to ignore.")
 
 	rootCmd.AddCommand(backupCmd)
 }

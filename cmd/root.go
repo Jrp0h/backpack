@@ -9,6 +9,11 @@ import (
 )
 
 var (
+	// Shared flags
+	only []string
+	except []string
+
+	// Global
 	cfgPath string
 	debugMode bool
 	verboseMode bool
@@ -45,4 +50,3 @@ func execWithConfig(f func(cmd *cobra.Command, args []string, cfg *config.Config
 		f(cmd, args, cfg)
 	}
 }
-
