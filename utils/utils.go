@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"os"
 )
 
 func ValueOrDefaultString(data *map[string]string, key string, def string) string {
@@ -28,13 +27,11 @@ func ValueOrErrorString(data *map[string]string, key string, action string) (str
 func AbortIfError(err interface{}) {
 	if err != nil {
 		Log.Fatal("%s", err)
-		os.Exit(1)
 	}
 }
 
 func AbortIf(cond bool, format string, v ...interface{}) {
 	if cond {
 		Log.Fatal(format, v...)
-		os.Exit(1)
 	}
 }

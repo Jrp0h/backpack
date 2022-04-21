@@ -1,6 +1,10 @@
 package utils
 
-import "github.com/pterm/pterm"
+import (
+	"os"
+
+	"github.com/pterm/pterm"
+)
 
 type logger struct {
 	VerboseEnabled bool
@@ -35,6 +39,7 @@ func (logger *logger) Fatal(format string, a ...interface{}) {
 	f.Fatal = logger.DebugEnabled
 
 	pterm.Fatal.Printfln(format, a...)
+	os.Exit(1)
 }
 
 func (logger *logger) Info(format string, a ...interface{}) {
