@@ -1,7 +1,9 @@
 package action
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
 	"strconv"
 	"time"
 
@@ -17,23 +19,51 @@ type ftpAction struct {
 	dir string
 }
 
-func (action *ftpAction) TestConnection() error {
+func (action *ftpAction) connect() (*ftp.ServerConn, error) {
 	c, err := ftp.Dial(fmt.Sprintf("%s:%d", action.host, action.port), ftp.DialWithTimeout(60*time.Second))
 	if err != nil {
-		return err
+		return nil, err
 	}
-	defer c.Quit()
 
 	err = c.Login(action.user, action.password)
 	if err != nil {
+		return nil, err
+	}
+
+	return c, nil
+
+}
+
+func (action *ftpAction) TestConnection() error {
+	c, err := action.connect()
+	if err != nil {
 		return err
 	}
+
+	c.Quit()
 
 	return nil
 }
 
 func (action *ftpAction) Run(fileData *utils.FileData) error {
-	return nil
+	c, err := action.connect()
+	if err != nil {
+		return err
+	}
+
+	defer c.Quit()
+
+	data, err := ioutil.ReadFile(fileData.Path)
+	if err != nil {
+		return err
+	}
+
+	err = c.ChangeDir(action.dir)
+	if err != nil {
+		return fmt.Errorf("couldn't change to %s. %s", action.dir, err.Error())
+	}
+
+	return c.Stor(fileData.Name, bytes.NewReader(data))
 }
 
 func loadFTPAction(data *map[string]string) (Action, error) {
