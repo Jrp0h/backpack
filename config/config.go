@@ -15,8 +15,8 @@ type Config struct {
 }
 
 type configFile struct {
-	Path string `yaml:"path"`
-	Hash string `yaml:"hash"`
+	Path string `yaml:"data_path"`
+	Hash string `yaml:"hash_path"`
 	Actions map[string]map[string]string `yaml:"actions"`
 	Encryption map[string]string `yaml:"encryption"`
 }
