@@ -1,5 +1,5 @@
 data_path: test
-hash_path: prev_hash
+hash_path: test/prev_hash
 
 encryption:
     type: aes
@@ -10,7 +10,7 @@ encryption:
 actions:
     move_to_tmp:
         type: move
-        dir: /tmp
+        dir: /tmp/test
 
     marcus_ftp:
         type: ftp

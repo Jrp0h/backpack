@@ -3,10 +3,13 @@ package action
 import (
 	"fmt"
 	"strings"
+
+	"github.com/Jrp0h/backuper/utils"
 )
 
 type Action interface {
 	TestConnection() error
+	Run(*utils.FileData) error
 }
 
 func LoadFromConfig(data *map[string]string) (Action, error) {

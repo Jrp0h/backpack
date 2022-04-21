@@ -3,7 +3,7 @@ package config
 import "github.com/Jrp0h/backuper/cryption"
 
 type cryptionConfig struct {
-	Enable bool
+	Enabled bool
 	Crypter cryption.Crypter
 }
 
@@ -12,13 +12,13 @@ func loadCryption(config *configFile) (cryptionConfig, error) {
 
 	if err != nil {
 		return cryptionConfig{
-			Enable: false,
+			Enabled: false,
 			Crypter: nil,
 		}, err
 	}
 
 	return cryptionConfig{
-		Enable: enc != nil,
+		Enabled: enc != nil,
 		Crypter: enc,
 	}, nil
 }

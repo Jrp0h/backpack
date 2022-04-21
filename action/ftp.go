@@ -32,6 +32,10 @@ func (action *ftpAction) TestConnection() error {
 	return nil
 }
 
+func (action *ftpAction) Run(fileData *utils.FileData) error {
+	return nil
+}
+
 func loadFTPAction(data *map[string]string) (Action, error) {
 
 	// Required

@@ -42,10 +42,17 @@ func (logger *logger) Fatal(format string, a ...interface{}) {
 	os.Exit(1)
 }
 
+func (logger *logger) FatalNoExit(format string, a ...interface{}) {
+	f := pterm.Fatal
+	f.Fatal = false
+
+	pterm.Fatal.Printfln(format, a...)
+}
+
 func (logger *logger) Info(format string, a ...interface{}) {
-	if logger.VerboseEnabled {
+	// if logger.VerboseEnabled {
 		pterm.Success.Printfln(format, a...)
-	}
+	// }
 }
 
 func (logger *logger) Debug(format string, a ...interface{}) {

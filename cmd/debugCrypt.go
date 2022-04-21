@@ -34,7 +34,7 @@ var decryptCmd = &cobra.Command{
 
 func encdec(encrypt bool) func (cmd *cobra.Command, args []string) {
 	return execWithConfig(func (cmd *cobra.Command, args []string, cfg *config.Config){
-		utils.AbortIf(!cfg.Cryption.Enable, "Encryption data is missing from config and is required for this command to run.")
+		utils.AbortIf(!cfg.Cryption.Enabled, "Encryption data is missing from config and is required for this command to run.")
 
 		var f func(string) error
 		var verb string

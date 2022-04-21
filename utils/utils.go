@@ -2,6 +2,8 @@ package utils
 
 import (
 	"fmt"
+	"path"
+	"time"
 )
 
 func ValueOrDefaultString(data *map[string]string, key string, def string) string {
@@ -33,5 +35,19 @@ func AbortIfError(err interface{}) {
 func AbortIf(cond bool, format string, v ...interface{}) {
 	if cond {
 		Log.Fatal(format, v...)
+	}
+}
+
+type FileData struct {
+	Name string
+	Path string
+}
+
+func NewFileData(format, filePath, ext string) FileData {
+	newFileName := fmt.Sprintf("%s.%s", FormatDate(format, time.Now()), ext)
+
+	return FileData{
+		Name: newFileName,
+		Path: path.Join(filePath, newFileName),
 	}
 }
