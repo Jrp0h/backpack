@@ -24,6 +24,8 @@ func LoadFromConfig(data *map[string]string) (Action, error) {
 		return loadFTPAction(data)
 	case "move":
 		return loadMoveAction(data)
+	case "s3":
+		return loadS3Action(data)
 	default:
 		return nil, fmt.Errorf("action/action: Unknown type '%s'", t)
 	}
