@@ -15,14 +15,15 @@ import (
 type s3Action struct {
 	bucket string
 	region string
-	id string
-	secret string
+	clientID string
+	clientSecret string
+	token string
 }
 
 func (action *s3Action) createConnection() (*session.Session, error) {
 	sess, err := session.NewSession(&aws.Config{
 		Region: &action.region,
-		Credentials: credentials.NewStaticCredentials(action.id, action.secret, ""),
+		Credentials: credentials.NewStaticCredentials(action.clientID, action.clientSecret, action.token),
 	})
 
 	if err != nil {
@@ -54,7 +55,7 @@ func (action *s3Action) Run(fileData *utils.FileData) error {
 	}
 	defer f.Close()
 
-	// Ugly 
+	// Check if file with the same name already exists 
 	_, err = s3.New(session).HeadObject(&s3.HeadObjectInput{
 		Bucket: &action.bucket,
 		Key:    &fileData.Name,
@@ -89,20 +90,23 @@ func loadS3Action(data *map[string]string) (Action, error) {
 		return nil, err
 	}
 
-	id, err := utils.ValueOrErrorString(data, "id", "action/s3")
+	id, err := utils.ValueOrErrorString(data, "client_id", "action/s3")
 	if err != nil {
 		return nil, err
 	}
 
-	secret, err := utils.ValueOrErrorString(data, "secret", "action/s3")
+	secret, err := utils.ValueOrErrorString(data, "client_secret", "action/s3")
 	if err != nil {
 		return nil, err
 	}
+
+	token := utils.ValueOrDefaultString(data, "token", "")
 
 	return &s3Action{
 		bucket,
 		region,
 		id,
 		secret,
+		token,
 	}, nil
 }

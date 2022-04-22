@@ -30,3 +30,10 @@ actions:
         pass: passw0rd
         host: 127.0.0.1
         port: 1029
+
+    s3_test:
+        type: s3
+        region: eu-north-1
+        bucket: my-bucket
+        client_secret: ajdkwajd
+        client_id: akwajdkawdk
