@@ -44,6 +44,8 @@ func walkDir(path string, writer *zip.Writer, first bool) error {
 			header.Name += "/"
 		}
 
+		header.SetMode(info.Mode())
+
         headerWriter, err := writer.CreateHeader(header)
         if err != nil {
             return err
@@ -110,12 +112,12 @@ func Unzip(input, output string) (outErr error) {
 
         if f.FileInfo().IsDir() {
             // Make Folder
-            os.MkdirAll(fpath, os.ModePerm)
+            os.MkdirAll(fpath, f.Mode())
             continue
         }
 
         // Make File
-        if err = os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
+        if err = os.MkdirAll(filepath.Dir(fpath), f.Mode()); err != nil {
             return err
         }
 

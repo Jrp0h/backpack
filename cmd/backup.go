@@ -23,7 +23,6 @@ var (
 
 		Run: execWithConfig(func(cmd *cobra.Command, args []string, cfg *config.Config) {
 			cfg.Require(config.Path | config.Actions)
-			cfg.Validate(config.Path)
 			backup(cfg)
 		}),
 	}
