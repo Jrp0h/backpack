@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/Jrp0h/backuper/utils"
 	"gopkg.in/yaml.v2"
@@ -72,6 +73,13 @@ func (c *Config) Validate(fields int) {
 	}
 }
 
+func (c *Config) Cd() {
+	if c.CWD != "" {
+		if err := os.Chdir(c.CWD); err != nil {
+			utils.Log.Fatal("%s", err.Error());
+		}
+	}
+}
 
 func checkStringField(name, value string) {
 	if value == "" {

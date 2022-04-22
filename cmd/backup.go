@@ -30,11 +30,7 @@ var (
 			actions := cfg.Actions.OnlyOrExcept(only, except)
 
 			// Change Current Directory if CWD isn't empty
-			if cfg.CWD != "" {
-				if err := os.Chdir(cfg.CWD); err != nil {
-					utils.Log.Fatal("%s", err.Error());
-				}
-			}
+			cfg.Cd()
 
 			file := utils.NewFileData("%Y-%m-%d_%H%M", os.TempDir(), "zip")
 

@@ -17,6 +17,7 @@ var (
 
 		Run: execWithConfig(func(cmd *cobra.Command, args []string, cfg *config.Config) {
 			actions := cfg.Actions.OnlyOrExcept(only, except)
+			cfg.Cd()
 
 			if len(actions) == 0 {
 				utils.Log.Warning("No actions to run.")
