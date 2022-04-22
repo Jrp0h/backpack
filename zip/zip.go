@@ -71,7 +71,6 @@ func walkDir(path string, writer *zip.Writer, first bool) error {
 	return nil
 }
 
-// Taken from https://gosamples.dev/zip-file/
 func Zip(input, output string) (outErr error) {
 
 	if utils.PathExists(output) {
