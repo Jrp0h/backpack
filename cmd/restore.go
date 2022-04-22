@@ -5,12 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-	"io"
-	"io/fs"
 	"os"
-	"path"
-	"path/filepath"
 
 	"github.com/Jrp0h/backuper/action"
 	"github.com/Jrp0h/backuper/config"
@@ -87,66 +82,7 @@ var (
 			os.RemoveAll(cfg.Path)
 
 			// Unzip
-			unzippedPath := path.Join(os.TempDir(), cfg.Path)
 			if err = zip.Unzip(fetchedPath, cfg.Path); err != nil {
-				utils.Log.FatalNoExit(err.Error())
-				return
-			}
-			utils.Log.Success("Data has been restored!")
-			return
-			defer os.Remove(unzippedPath)
-
-
-			// Move files
-			base, dirName := path.Split(cfg.Path)
-			folderToMove := path.Join(unzippedPath, dirName)
-
-			err = filepath.Walk(folderToMove, func(path string, info fs.FileInfo, err error) error {
-				if err != nil {
-					return err
-				}
-
-				rel, err := filepath.Rel(filepath.Dir(folderToMove), path)
-				if err != nil {
-					return err
-        		}
-
-				out := filepath.Join(base, rel)
-
-				if info.IsDir() {
-					utils.Log.Debug("Creating dir %s", out)
-					os.MkdirAll(out, os.ModePerm)
-					return nil
-				}
-
-				existing, err := os.Open(path)
-				if err != nil {
-					return err
-				}
-				defer existing.Close()
-
-
-				if utils.PathExists(out) {
-					return fmt.Errorf("%s already exists", out)
-				}
-
-
-				utils.Log.Debug("Creating file %s", out)
-				outFile, err := os.OpenFile(out, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, info.Mode())
-				if err != nil {
-					return err
-				}
-				defer outFile.Close()
-
-				utils.Log.Debug("Copying file %s to %s", path, out)
-				if _, err = io.Copy(outFile, existing); err != nil {
-					return err
-				}
-
-				return nil
-			})
-
-			if err != nil {
 				utils.Log.FatalNoExit(err.Error())
 				return
 			}
