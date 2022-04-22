@@ -3,11 +3,15 @@ package action
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"os"
+	"path"
 	"strconv"
 	"time"
 
 	"github.com/Jrp0h/backuper/utils"
+	"github.com/google/uuid"
 	"github.com/jlaffaye/ftp"
 )
 
@@ -71,13 +75,58 @@ func (action *ftpAction) Run(fileData *utils.FileData) error {
 }
 
 func (action *ftpAction) ListFiles() ([]string, error) {
-	// TODO: Implement
-	return nil, nil
+	c, err := action.connect()
+	if err != nil {
+		return nil, err
+	}
+	defer c.Quit()
+
+	entries, err := c.List(action.dir)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't list %s. %s", action.dir, err.Error())
+	}
+
+	files := make([]string, 0)
+
+	for _, entry := range entries {
+		if entry.Type == ftp.EntryTypeFile {
+			files = append(files, entry.Name)
+		}
+	}
+
+	return files, nil
 }
 
 func (action *ftpAction) Fetch(file string) (string, error) {
-	// TODO: Implement
-	return "", nil
+	c, err := action.connect()
+	if err != nil {
+		return "", err
+	}
+	defer c.Quit()
+
+	err = c.ChangeDir(action.dir)
+	if err != nil {
+		return "", fmt.Errorf("couldn't change to %s. %s", action.dir, err.Error())
+	}
+
+	r, err := c.Retr(file)
+	if err != nil {
+		return "", fmt.Errorf("couldn't retrive file %s. %s", file, err.Error())
+	}
+	defer r.Close()
+
+	outPath := path.Join(os.TempDir(), uuid.NewString() + ".zip")
+	outFile, err := os.OpenFile(outPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return "", err
+	}
+	defer outFile.Close()
+
+	if _, err = io.Copy(outFile, r); err != nil {
+		return "", err
+	}
+
+	return outPath, nil
 }
 
 func loadFTPAction(data *map[string]string) (Action, error) {

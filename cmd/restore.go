@@ -39,8 +39,6 @@ var (
 				}
 			}
 
-			// Remove old
-			os.RemoveAll(cfg.Path)
 
 			var action action.Action
 			var file string
@@ -93,6 +91,9 @@ var (
 				return
 			}
 			defer os.Remove(unzippedPath)
+
+			// Remove old
+			os.RemoveAll(cfg.Path)
 
 			// Move files
 			base, dirName := path.Split(cfg.Path)
