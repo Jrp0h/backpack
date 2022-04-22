@@ -34,6 +34,10 @@ func (action *ftpAction) connect() (*ftp.ServerConn, error) {
 
 }
 
+func (action *ftpAction) CanValidateConnection() bool {
+	return true
+}
+
 func (action *ftpAction) TestConnection() error {
 	c, err := action.connect()
 	if err != nil {

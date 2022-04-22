@@ -27,9 +27,16 @@ var (
 			p.RemoveWhenDone = true
 
 			succeded := 0
+			unknown := 0
 
 			for k, v := range actions {
 				p.UpdateTitle(fmt.Sprintf("Trying to connect to '%s'", k))
+				if !v.CanValidateConnection() {
+					utils.Log.Info("%s: can't test connection", k)
+					unknown++
+					p.Increment()
+					continue
+				}
 				if err := v.TestConnection(); err != nil {
 					utils.Log.Error("%s: %s", k, err.Error())
 				} else {
@@ -47,7 +54,7 @@ var (
 			case succeded == 0:
 				utils.Log.Error("All actions failed to connect")
 			default:
-				utils.Log.Warning("%d/%d actions connected successfully", succeded, len(actions))
+				utils.Log.Info("%d/%d actions connected successfully. %d unknown", succeded, len(actions), unknown)
 			}
 		}),
 	}

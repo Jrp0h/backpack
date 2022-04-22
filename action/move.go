@@ -12,6 +12,10 @@ type moveAction struct {
 	dir string
 }
 
+func (action *moveAction) CanValidateConnection() bool {
+	return true
+}
+
 // TODO: Maybe check if directory exists and if user has permissions
 func (action *moveAction) TestConnection() error {
 	if utils.PathIsDir(action.dir) {

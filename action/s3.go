@@ -32,6 +32,10 @@ func (action *s3Action) createConnection() (*session.Session, error) {
 	return sess, nil
 }
 
+func (action *s3Action) CanValidateConnection() bool {
+	return false // TODO: Fix this
+}
+
 func (action *s3Action) TestConnection() error {
 	_, err := action.createConnection() 
 	return err

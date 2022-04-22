@@ -51,7 +51,7 @@ func (logger *logger) FatalNoExit(format string, a ...interface{}) {
 
 func (logger *logger) Info(format string, a ...interface{}) {
 	// if logger.VerboseEnabled {
-		pterm.Success.Printfln(format, a...)
+		pterm.Info.Printfln(format, a...)
 	// }
 }
 

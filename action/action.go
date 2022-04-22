@@ -8,6 +8,7 @@ import (
 )
 
 type Action interface {
+	CanValidateConnection() bool
 	TestConnection() error
 	Run(*utils.FileData) error
 }
