@@ -11,6 +11,66 @@ import (
 	"github.com/Jrp0h/backuper/utils"
 )
 
+func walkDir(path string, writer *zip.Writer, first bool) error {
+	entries, err := os.ReadDir(path)
+	if err != nil {
+		return err
+	}
+
+	for _, entry := range entries {
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+
+        header, err := zip.FileInfoHeader(info)
+        if err != nil {
+            return err
+        }
+
+		header.Method = zip.Deflate
+
+		if first {
+			header.Name, err = filepath.Rel(filepath.Dir(path), entry.Name())
+			if err != nil {
+				return err
+			}
+		} else {
+			header.Name = strings.Join(strings.Split(path, "/")[1:], "/")
+			header.Name = filepath.Join(header.Name, entry.Name())
+		}
+
+		if info.IsDir() {
+			header.Name += "/"
+		}
+
+        headerWriter, err := writer.CreateHeader(header)
+        if err != nil {
+            return err
+        }
+
+		if info.IsDir() {
+			if err = walkDir(filepath.Join(path, entry.Name()), writer, false); err != nil {
+				return err
+			}
+			continue
+		}
+
+        f, err := os.Open(filepath.Join(path, entry.Name()))
+        if err != nil {
+            return err
+        }
+        defer f.Close()
+
+        if _, err = io.Copy(headerWriter, f); err != nil {
+        	return err
+		}
+
+	}
+
+	return nil
+}
+
 // Taken from https://gosamples.dev/zip-file/
 func Zip(input, output string) (outErr error) {
 
@@ -27,48 +87,7 @@ func Zip(input, output string) (outErr error) {
     writer := zip.NewWriter(f)
     defer writer.Close()
 
-  	return filepath.Walk(input, func(path string, info os.FileInfo, err error) error {
-        if err != nil {
-            return err
-        }
-
-        // 3. Create a local file header
-        header, err := zip.FileInfoHeader(info)
-        if err != nil {
-            return err
-        }
-
-        // set compression
-        header.Method = zip.Deflate
-
-        // 4. Set relative path of a file as the header name
-        header.Name, err = filepath.Rel(filepath.Dir(input), path)
-        if err != nil {
-            return err
-        }
-        if info.IsDir() {
-            header.Name += "/"
-        }
-
-        // 5. Create writer for the file header and save content of the file
-        headerWriter, err := writer.CreateHeader(header)
-        if err != nil {
-            return err
-        }
-
-        if info.IsDir() {
-            return nil
-        }
-
-        f, err := os.Open(path)
-        if err != nil {
-            return err
-        }
-        defer f.Close()
-
-        _, err = io.Copy(headerWriter, f)
-        return err
-    })
+	return walkDir(input, writer, true)
 }
 
 // Taken from https://golangcode.com/unzip-files-in-go/

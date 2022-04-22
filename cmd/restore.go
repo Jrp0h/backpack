@@ -16,7 +16,6 @@ import (
 	"github.com/Jrp0h/backuper/config"
 	"github.com/Jrp0h/backuper/utils"
 	"github.com/Jrp0h/backuper/zip"
-	"github.com/google/uuid"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
@@ -84,16 +83,19 @@ var (
 				return
 			}
 
+			// Remove old
+			os.RemoveAll(cfg.Path)
+
 			// Unzip
-			unzippedPath := path.Join(os.TempDir(), uuid.NewString())
-			if err = zip.Unzip(fetchedPath, unzippedPath); err != nil {
+			unzippedPath := path.Join(os.TempDir(), cfg.Path)
+			if err = zip.Unzip(fetchedPath, cfg.Path); err != nil {
 				utils.Log.FatalNoExit(err.Error())
 				return
 			}
+			utils.Log.Success("Data has been restored!")
+			return
 			defer os.Remove(unzippedPath)
 
-			// Remove old
-			os.RemoveAll(cfg.Path)
 
 			// Move files
 			base, dirName := path.Split(cfg.Path)
