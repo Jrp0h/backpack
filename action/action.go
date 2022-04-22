@@ -10,7 +10,7 @@ import (
 type Action interface {
 	CanValidateConnection() bool
 	TestConnection() error
-	Run(*utils.FileData) error
+	Upload(*utils.FileData) error
 	ListFiles() ([]string, error)
 	Fetch(string) (string, error)
 }

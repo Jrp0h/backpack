@@ -100,7 +100,7 @@ func handleEncrypt(cfg *config.Config, path string) error {
 }
 
 func runAction(file *utils.FileData, actionName string, action action.Action, p *pterm.ProgressbarPrinter, succeded *int, wg *sync.WaitGroup, m *sync.Mutex) {
-	err := action.Run(file)
+	err := action.Upload(file)
 
 	m.Lock()
 	if err != nil {

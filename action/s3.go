@@ -42,7 +42,7 @@ func (action *s3Action) TestConnection() error {
 	return err
 }
 
-func (action *s3Action) Run(fileData *utils.FileData) error {
+func (action *s3Action) Upload(fileData *utils.FileData) error {
 	session, err := action.createConnection() 
 
 	if err != nil {

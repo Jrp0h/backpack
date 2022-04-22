@@ -27,7 +27,7 @@ func (action *moveAction) TestConnection() error {
 	return fmt.Errorf("action/move: %s isn't a directory", action.dir)
 }
 
-func (action *moveAction) Run(fileData *utils.FileData) error {
+func (action *moveAction) Upload(fileData *utils.FileData) error {
 	outputPath := path.Join(action.dir, fileData.Name)
 	if utils.PathExists(outputPath) {
 		return fmt.Errorf("action/move: output path %s already exists", outputPath)

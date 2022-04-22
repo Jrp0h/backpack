@@ -53,7 +53,7 @@ func (action *ftpAction) TestConnection() error {
 	return nil
 }
 
-func (action *ftpAction) Run(fileData *utils.FileData) error {
+func (action *ftpAction) Upload(fileData *utils.FileData) error {
 	c, err := action.connect()
 	if err != nil {
 		return err
