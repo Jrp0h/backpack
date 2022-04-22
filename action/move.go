@@ -3,9 +3,11 @@ package action
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 
 	"github.com/Jrp0h/backuper/utils"
+	"github.com/google/uuid"
 )
 
 type moveAction struct {
@@ -26,11 +28,6 @@ func (action *moveAction) TestConnection() error {
 }
 
 func (action *moveAction) Run(fileData *utils.FileData) error {
-	err := action.TestConnection()
-	if err != nil {
-		return err
-	}
-
 	outputPath := path.Join(action.dir, fileData.Name)
 	if utils.PathExists(outputPath) {
 		return fmt.Errorf("action/move: output path %s already exists", outputPath)
@@ -47,6 +44,44 @@ func (action *moveAction) Run(fileData *utils.FileData) error {
     }
 
 	return nil
+}
+
+func (action *moveAction) ListFiles() ([]string, error) {
+	files := make([]string, 0)
+	entries, err := os.ReadDir(action.dir)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			files = append(files, entry.Name())
+		}
+	}
+
+	return files, nil
+}
+
+func (action *moveAction) Fetch(file string) (string, error) {
+
+	outputPath := path.Join(os.TempDir(), uuid.NewString() + ".zip")
+	if utils.PathExists(outputPath) {
+		return "", fmt.Errorf("action/move: output path %s already exists", outputPath)
+	}
+
+	inputPath := path.Join(action.dir, file)
+
+	data, err := ioutil.ReadFile(inputPath)
+    if err != nil {
+		return "", fmt.Errorf("action/move: couldn't read file %s\n%s", inputPath, err.Error())
+    }
+
+    err = ioutil.WriteFile(outputPath, data, 0644)
+    if err != nil {
+		return "", fmt.Errorf("action/move: couldn't write file %s\n%s", outputPath, err.Error())
+    }
+
+	return outputPath, nil
 }
 
 func loadMoveAction(data *map[string]string) (Action, error) {

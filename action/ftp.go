@@ -70,6 +70,16 @@ func (action *ftpAction) Run(fileData *utils.FileData) error {
 	return c.Stor(fileData.Name, bytes.NewReader(data))
 }
 
+func (action *ftpAction) ListFiles() ([]string, error) {
+	// TODO: Implement
+	return nil, nil
+}
+
+func (action *ftpAction) Fetch(file string) (string, error) {
+	// TODO: Implement
+	return "", nil
+}
+
 func loadFTPAction(data *map[string]string) (Action, error) {
 
 	// Required

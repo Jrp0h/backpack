@@ -78,6 +78,16 @@ func (action *s3Action) Run(fileData *utils.FileData) error {
 	return nil
 }
 
+func (action *s3Action) ListFiles() ([]string, error) {
+	// TODO: Implement
+	return nil, nil
+}
+
+func (action *s3Action) Fetch(file string) (string, error) {
+	// TODO: Implement
+	return "", nil
+}
+
 func loadS3Action(data *map[string]string) (Action, error) {
 	// Required
 	bucket, err := utils.ValueOrErrorString(data, "bucket", "action/s3")

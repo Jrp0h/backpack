@@ -17,9 +17,6 @@ import (
 )
 
 var (
-	bNoEncrypt = false
-	bForce = false
-
 	backupCmd = &cobra.Command{
 		Use:   "backup",
 		Short: "Zip, Encrypt and Store files",
@@ -27,71 +24,14 @@ var (
 		Run: execWithConfig(func(cmd *cobra.Command, args []string, cfg *config.Config) {
 			cfg.Require(config.Path | config.Actions)
 			cfg.Validate(config.Path)
-			actions := cfg.Actions.OnlyOrExcept(only, except)
-
-			// Change Current Directory if CWD isn't empty
-			cfg.Cd()
-
-			file := utils.NewFileData("%Y-%m-%d_%H%M", os.TempDir(), "zip")
-
-			// Zip
-			utils.AbortIfError(zip.Zip(cfg.Path, file.Path))
-			defer os.Remove(file.Path) // Clean up
-
-			// Hash
-			err, shouldContinue := handleHash(cfg, file.Path) 
-			if err != nil {
-				utils.Log.FatalNoExit(err.Error())
-				return
-			}
-
-			if !shouldContinue {
-				return
-			}
-
-			// Encrypt
-			err = handleEncrypt(cfg, file.Path)
-			if err != nil {
-				utils.Log.FatalNoExit(err.Error())
-				return
-			}
-
-			// Run Actions
-			if len(actions) == 0 {
-				utils.Log.Warning("No actions to run. Stopping")
-				return
-			}
-
-			wg := new(sync.WaitGroup)
-			m := new(sync.Mutex)
-			succeded := 0
-
-			p, _ := pterm.DefaultProgressbar.WithTotal(len(actions)).WithTitle("Running actions").Start()
-			p.RemoveWhenDone = true
-
-			for k, v := range actions {
-				wg.Add(1)
-				go runAction(&file, k, v, p, &succeded, wg, m)
-			}
-
-			wg.Wait()
-
-			println()
-			switch {
-			case succeded == len(actions):
-				utils.Log.Success("All actions completed successfully")
-			case succeded == 0:
-				utils.Log.Error("All actions failed")
-			default:
-				utils.Log.Warning("%d/%d actions succeded", succeded, len(actions))
-			}
+			backup(cfg)
 		}),
 	}
 )
 
 func init() {
-	backupCmd.Flags().BoolVar(&bNoEncrypt, "no-encrypt", false, "Doesn't encrypt files")
-	backupCmd.Flags().BoolVar(&bForce, "force", false, "Force backup even if prev_hash is the same")
+	backupCmd.Flags().BoolVar(&noEncrypt, "no-encrypt", false, "Doesn't encrypt files")
+	backupCmd.Flags().BoolVar(&force, "force", false, "Force backup even if prev_hash is the same")
 
 	backupCmd.Flags().StringArrayVar(&only, "only", []string{}, "List of connections to try.")
 	backupCmd.Flags().StringArrayVar(&except, "except", []string{}, "List of connections to ignore.")
@@ -117,7 +57,7 @@ func handleHash(cfg *config.Config, path string) (error, bool) {
 	// Check Prev Hash
 	var prevHash []byte
 
-	if !bForce {
+	if !force {
 		prev, err := ioutil.ReadFile(cfg.Hash)
 		if err != nil {
 			return err, false
@@ -129,7 +69,7 @@ func handleHash(cfg *config.Config, path string) (error, bool) {
 		}
 	}
 
-	if bytes.Equal(newHash, prevHash) && !bForce {
+	if bytes.Equal(newHash, prevHash) && !force {
 		utils.Log.Info("Data hasn't changed and force is not enabled. Stopping")
 		return nil, false
 	}
@@ -146,7 +86,7 @@ func handleHash(cfg *config.Config, path string) (error, bool) {
 }
 
 func handleEncrypt(cfg *config.Config, path string) error {
-	if bNoEncrypt {
+	if noEncrypt {
 		return nil
 	}
 
@@ -173,4 +113,68 @@ func runAction(file *utils.FileData, actionName string, action action.Action, p 
 	m.Unlock()
 
 	wg.Done()
+}
+
+func backup(cfg *config.Config) bool {
+	actions := cfg.Actions.OnlyOrExcept(only, except)
+
+	// Change Current Directory if CWD isn't empty
+	cfg.Cd()
+
+	file := utils.NewFileData("%Y-%m-%d_%H%M", os.TempDir(), "zip")
+
+	// Zip
+	utils.AbortIfError(zip.Zip(cfg.Path, file.Path))
+	defer os.Remove(file.Path) // Clean up
+
+	// Hash
+	// FIXME: Can't restore because data hasn't changed since last backup
+	err, shouldContinue := handleHash(cfg, file.Path) 
+	if err != nil {
+		utils.Log.FatalNoExit(err.Error())
+		return false
+	}
+
+	if !shouldContinue {
+		return false
+	}
+
+	// Encrypt
+	err = handleEncrypt(cfg, file.Path)
+	if err != nil {
+		utils.Log.FatalNoExit(err.Error())
+		return false
+	}
+
+	// Run Actions
+	if len(actions) == 0 {
+		utils.Log.Warning("No actions to run. Stopping")
+		return false
+	}
+
+	wg := new(sync.WaitGroup)
+	m := new(sync.Mutex)
+	succeded := 0
+
+	p, _ := pterm.DefaultProgressbar.WithTotal(len(actions)).WithTitle("Running actions").Start()
+	p.RemoveWhenDone = true
+
+	for k, v := range actions {
+		wg.Add(1)
+		go runAction(&file, k, v, p, &succeded, wg, m)
+	}
+
+	wg.Wait()
+
+	println()
+	switch {
+	case succeded == len(actions):
+		utils.Log.Success("All actions completed successfully")
+	case succeded == 0:
+		utils.Log.Error("All actions failed")
+	default:
+		utils.Log.Warning("%d/%d actions succeded", succeded, len(actions))
+	}
+
+	return true
 }

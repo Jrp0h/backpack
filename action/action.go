@@ -11,6 +11,8 @@ type Action interface {
 	CanValidateConnection() bool
 	TestConnection() error
 	Run(*utils.FileData) error
+	ListFiles() ([]string, error)
+	Fetch(string) (string, error)
 }
 
 func LoadFromConfig(data *map[string]string) (Action, error) {

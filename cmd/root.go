@@ -12,6 +12,8 @@ var (
 	// Shared flags
 	only []string
 	except []string
+	noEncrypt bool
+	force bool
 
 	// Global
 	cfgPath string
