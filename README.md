@@ -8,9 +8,9 @@ Supported storages:
 - move (move to local folder)
 - AWS S3
 
-# Commands
+# Usage
 
-Usage: `backpack command [args] [flags]`
+Usage: `backpack <command> [args] [flags]`
 
 All commands require the `--config` flag and must be a path to the config file.
 
@@ -21,6 +21,12 @@ Global Flags (all commands has these):
 | c, config | string | Path to config file                                 | true     | no default |
 | debug     | bool   | Enable debug mode. MAY PRINT SENSITIVE INFORMATION. | false    | false      |
 | h, help   | bool   | Displays help                                       | false    | false      |
+
+Commands:
+
+- [backup](#backup)
+- [restore](#restore)
+- [test-connections](#test-connections)
 
 ## backup
 
@@ -53,7 +59,7 @@ Flags:
 | no-encrypt | bool             | Doesn't encrypt data before uploading backup and doesn't decrypt data after download. | false    | false      |
 | no-backup  | bool             | Doesn't create backup before restoring                                                | false    | false      |
 
-## restore
+## test-connections
 
 Usage: `backpack test-connections [flags] --config <path to config>`
 
