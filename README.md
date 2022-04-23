@@ -78,13 +78,13 @@ The config file is a yml file with all the information to be able to store and f
 
 ## Fields
 
-| Key        | Type   | Description                                                                                           | Required |
-| ---------- | ------ | ----------------------------------------------------------------------------------------------------- | -------- |
-| data_path  | string | Path to the folder that will be backed up or replaced when restoring                                  | true     |
-| hash_path  | string | Path to a file containing the sha512 hash from the last backup. This is to prevent duplicate backups. | true     |
-| cwd        | string | If defined then the program will move into that folder making relative path relative to cwd.          | false    |
-| encryption | map    | Information about encryption data. Read section [Encryption](#encryption)                             | false    |
-| actions    | map    | List of different storages to backup to. Read section [Actions](#actions)                             | true     |
+| Key        | Type   | Description                                                                                                                                                                  | Required |
+| ---------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| data_path  | string | Path to the folder that will be backed up or replaced when restoring                                                                                                         | true     |
+| hash_path  | string | Path to a file containing the sha512 hash from the last backup. This is to prevent duplicate backups.                                                                        | true     |
+| cwd        | string | If defined then the program will move into that folder making relative path relative to cwd. (`--config` flag will still be relative to where the program was executed from) | false    |
+| encryption | map    | Information about encryption data. Read section [Encryption](#encryption)                                                                                                    | false    |
+| actions    | map    | List of different storages to backup to. Read section [Actions](#actions)                                                                                                    | true     |
 
 ### Encryption
 
@@ -212,4 +212,35 @@ actions:
     client_id: akwajdkawdk
   # rest of actions...
 # rest of the config...
+```
+
+## Example
+
+```yaml
+data_path: database/data
+prev_hash: ./prev_hash
+cwd: /home/user1/mywebsite # remove this if you want cwd to be where you executed the program
+
+encryption: # Remove this if you don't want encryption
+  type: aes
+  key: raw:thisis32bitlongpassphraseimusing
+
+actions:
+  s3_my_bucket:
+    type: s3
+    region: eu-north-1
+    bucket: my-bucket
+    client_secret: ajdkwajd
+    client_id: akwajdkawdk
+
+  ftp_local:
+    type: ftp
+    user: user1
+    password: Very_$ecure_passw0rd
+    host: 127.0.0.1
+    port: 603
+
+  move_to_tmp:
+    type: move
+    dir: /tmp
 ```
