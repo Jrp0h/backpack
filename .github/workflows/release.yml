@@ -25,7 +25,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_name: Backuper ${{ steps.info.outputs.name }}
+          release_name: Backpack ${{ steps.info.outputs.name }}
           tag_name: ${{ steps.info.outputs.name }}
           draft: true
           prerelease: false
@@ -34,7 +34,7 @@ jobs:
     needs: [create_release]
     strategy:
       matrix:
-        platform: 
+        platform:
           [
             "linux amd64",
             "linux arm64",
@@ -50,7 +50,7 @@ jobs:
             "netbsd amd64",
             "netbsd arm64",
             "openbsd amd64",
-            "openbsd arm64"
+            "openbsd arm64",
           ]
     name: Build ${{ matrix.platform }}
     runs-on: ubuntu-latest
@@ -62,7 +62,7 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.18
-      
+
       - name: Info
         id: info
         shell: bash
@@ -71,7 +71,7 @@ jobs:
           ARCH="${platform##* }"
           OS="${platform%% *}"
 
-          OUTPUT="backuper-${{ needs.create_release.outputs.version }}-$OS-$ARCH"
+          OUTPUT="backpack-${{ needs.create_release.outputs.version }}-$OS-$ARCH"
 
           echo "::set-output name=os::$OS"
           echo "::set-output name=arch::$ARCH"
@@ -84,9 +84,9 @@ jobs:
 
           mkdir "$output"
 
-          output_file="backuper"
+          output_file="backpack"
           if [ "${{ steps.info.outputs.os }}" = "windows" ]; then
-            output_file="backuper.exe"
+            output_file="backpack.exe"
           fi
 
           GOOS="${{ steps.info.outputs.os }}" GOARCH="${{ steps.info.outputs.arch }}" go build -o "$output/$output_file" main.go
@@ -120,6 +120,3 @@ jobs:
           asset_path: ${{ steps.zip.outputs.zipped }}
           asset_name: ${{ steps.zip.outputs.zipped }}
           asset_content_type: ${{ steps.zip.outputs.mime }}
-
-
-

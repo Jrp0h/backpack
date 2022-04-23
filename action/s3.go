@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Jrp0h/backuper/utils"
+	"github.com/Jrp0h/backpack/utils"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"

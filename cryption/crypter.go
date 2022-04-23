@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Jrp0h/backuper/utils"
+	"github.com/Jrp0h/backpack/utils"
 )
 
 type Crypter interface {

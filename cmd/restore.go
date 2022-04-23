@@ -7,10 +7,10 @@ package cmd
 import (
 	"os"
 
-	"github.com/Jrp0h/backuper/action"
-	"github.com/Jrp0h/backuper/config"
-	"github.com/Jrp0h/backuper/utils"
-	"github.com/Jrp0h/backuper/zip"
+	"github.com/Jrp0h/backpack/action"
+	"github.com/Jrp0h/backpack/config"
+	"github.com/Jrp0h/backpack/utils"
+	"github.com/Jrp0h/backpack/zip"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )

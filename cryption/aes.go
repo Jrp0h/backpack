@@ -12,7 +12,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/Jrp0h/backuper/utils"
+	"github.com/Jrp0h/backpack/utils"
 )
 
 var validTypes = map[string]func (string) ([]byte, error){

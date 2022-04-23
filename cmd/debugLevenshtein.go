@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/Jrp0h/backuper/config"
-	"github.com/Jrp0h/backuper/utils"
+	"github.com/Jrp0h/backpack/config"
+	"github.com/Jrp0h/backpack/utils"
 	"github.com/spf13/cobra"
 )
 

@@ -1,4 +1,4 @@
-module github.com/Jrp0h/backuper
+module github.com/Jrp0h/backpack
 
 go 1.18
 

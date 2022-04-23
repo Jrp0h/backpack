@@ -1,6 +1,6 @@
 package config
 
-import "github.com/Jrp0h/backuper/cryption"
+import "github.com/Jrp0h/backpack/cryption"
 
 type cryptionConfig struct {
 	Enabled bool

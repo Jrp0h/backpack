@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Jrp0h/backuper/utils"
+	"github.com/Jrp0h/backpack/utils"
 )
 
 func walkDir(path string, writer *zip.Writer, first bool) error {

@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/Jrp0h/backuper/utils"
+	"github.com/Jrp0h/backpack/utils"
 	"gopkg.in/yaml.v2"
 )
 

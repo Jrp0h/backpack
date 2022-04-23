@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Jrp0h/backuper/action"
-	"github.com/Jrp0h/backuper/utils"
+	"github.com/Jrp0h/backpack/action"
+	"github.com/Jrp0h/backpack/utils"
 )
 
 type actionsConfig map[string]action.Action
