@@ -10,14 +10,14 @@ import (
 
 var (
 	// Shared flags
-	only []string
-	except []string
+	only      []string
+	except    []string
 	noEncrypt bool
-	force bool
+	force     bool
 
 	// Global
-	cfgPath string
-	debugMode bool
+	cfgPath     string
+	debugMode   bool
 	verboseMode bool
 
 	rootCmd = &cobra.Command{
@@ -34,6 +34,7 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.PersistentFlags().StringVarP(&cfgPath, "config", "c", "", "Path to config file.")
 	rootCmd.MarkPersistentFlagRequired("config")
 
@@ -41,8 +42,8 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&verboseMode, "verbose", false, "Print more information.")
 }
 
-func execWithConfig(f func(cmd *cobra.Command, args []string, cfg *config.Config)) func(cmd *cobra.Command, args []string){
-	return func (cmd *cobra.Command, args []string) {
+func execWithConfig(f func(cmd *cobra.Command, args []string, cfg *config.Config)) func(cmd *cobra.Command, args []string) {
+	return func(cmd *cobra.Command, args []string) {
 		utils.Log.DebugEnabled = debugMode
 		utils.Log.VerboseEnabled = verboseMode
 
