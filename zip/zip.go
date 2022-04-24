@@ -23,10 +23,10 @@ func walkDir(path string, writer *zip.Writer, first bool) error {
 			return err
 		}
 
-        header, err := zip.FileInfoHeader(info)
-        if err != nil {
-            return err
-        }
+		header, err := zip.FileInfoHeader(info)
+		if err != nil {
+			return err
+		}
 
 		header.Method = zip.Deflate
 
@@ -46,10 +46,10 @@ func walkDir(path string, writer *zip.Writer, first bool) error {
 
 		header.SetMode(info.Mode())
 
-        headerWriter, err := writer.CreateHeader(header)
-        if err != nil {
-            return err
-        }
+		headerWriter, err := writer.CreateHeader(header)
+		if err != nil {
+			return err
+		}
 
 		if info.IsDir() {
 			if err = walkDir(filepath.Join(path, entry.Name()), writer, false); err != nil {
@@ -58,14 +58,14 @@ func walkDir(path string, writer *zip.Writer, first bool) error {
 			continue
 		}
 
-        f, err := os.Open(filepath.Join(path, entry.Name()))
-        if err != nil {
-            return err
-        }
-        defer f.Close()
+		f, err := os.Open(filepath.Join(path, entry.Name()))
+		if err != nil {
+			return err
+		}
+		defer f.Close()
 
-        if _, err = io.Copy(headerWriter, f); err != nil {
-        	return err
+		if _, err = io.Copy(headerWriter, f); err != nil {
+			return err
 		}
 
 	}
@@ -79,14 +79,14 @@ func Zip(input, output string) (outErr error) {
 		return fmt.Errorf("output path %s already exists", output)
 	}
 
-    f, err := os.Create(output)
-    if err != nil {
-        return err
-    }
-    defer f.Close()
+	f, err := os.Create(output)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
 
-    writer := zip.NewWriter(f)
-    defer writer.Close()
+	writer := zip.NewWriter(f)
+	defer writer.Close()
 
 	return walkDir(input, writer, true)
 }
@@ -94,56 +94,56 @@ func Zip(input, output string) (outErr error) {
 // Taken from https://golangcode.com/unzip-files-in-go/
 func Unzip(input, output string) (outErr error) {
 
-    r, err := zip.OpenReader(input)
-    if err != nil {
-        return err
-    }
-    defer r.Close()
+	r, err := zip.OpenReader(input)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
 
-    for _, f := range r.File {
+	for _, f := range r.File {
 
-        // Store filename/path for returning and using later on
-        fpath := filepath.Join(output, f.Name)
+		// Store filename/path for returning and using later on
+		fpath := filepath.Join(output, f.Name)
 
-        // Check for ZipSlip. More Info: http://bit.ly/2MsjAWE
-        if !strings.HasPrefix(fpath, filepath.Clean(output)+string(os.PathSeparator)) {
-            return fmt.Errorf("%s: illegal file path", fpath)
-        }
+		// Check for ZipSlip. More Info: http://bit.ly/2MsjAWE
+		if !strings.HasPrefix(fpath, filepath.Clean(output)+string(os.PathSeparator)) {
+			return fmt.Errorf("%s: illegal file path", fpath)
+		}
 
-        if f.FileInfo().IsDir() {
-            // Make Folder
-            os.MkdirAll(fpath, f.Mode())
-            continue
-        }
+		if f.FileInfo().IsDir() {
+			// Make Folder
+			os.MkdirAll(fpath, f.Mode())
+			continue
+		}
 
-        // Make File
-        if err = os.MkdirAll(filepath.Dir(fpath), f.Mode()); err != nil {
-            return err
-        }
+		// Make File
+		if err = os.MkdirAll(filepath.Dir(fpath), f.Mode()); err != nil {
+			return err
+		}
 
 		if utils.PathExists(fpath) {
 			return fmt.Errorf("%s already exists", fpath)
 		}
 
-        outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-        if err != nil {
-            return err
-        }
+		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		if err != nil {
+			return err
+		}
 
-        rc, err := f.Open()
-        if err != nil {
-            return err
-        }
+		rc, err := f.Open()
+		if err != nil {
+			return err
+		}
 
-        _, err = io.Copy(outFile, rc)
+		_, err = io.Copy(outFile, rc)
 
-        // Close the file without defer to close before next iteration of loop
-        outFile.Close()
-        rc.Close()
+		// Close the file without defer to close before next iteration of loop
+		outFile.Close()
+		rc.Close()
 
-        if err != nil {
-            return err
-        }
-    }
-    return nil
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

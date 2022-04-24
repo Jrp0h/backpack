@@ -16,11 +16,11 @@ import (
 )
 
 type ftpAction struct {
-	user string
+	user     string
 	password string
-	host string
-	port uint64
-	dir string
+	host     string
+	port     uint64
+	dir      string
 }
 
 func (action *ftpAction) connect() (*ftp.ServerConn, error) {
@@ -115,7 +115,7 @@ func (action *ftpAction) Fetch(file string) (string, error) {
 	}
 	defer r.Close()
 
-	outPath := path.Join(os.TempDir(), uuid.NewString() + ".zip")
+	outPath := path.Join(os.TempDir(), uuid.NewString()+".zip")
 	outFile, err := os.OpenFile(outPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return "", err

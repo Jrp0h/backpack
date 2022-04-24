@@ -1,6 +1,5 @@
 package utils
 
-
 func JoinWithSeparatorAndLast(values []string, separator string, last string) string {
 	lastIndex := len(values) - 1
 	result := ""
@@ -9,10 +8,10 @@ func JoinWithSeparatorAndLast(values []string, separator string, last string) st
 		switch {
 		case i == 0:
 			result += text
-		
+
 		case i == lastIndex:
 			result += " " + last + " " + text
-		
+
 		default:
 			result += separator + " " + text
 		}
@@ -26,7 +25,7 @@ func JoinSliceWithSeparatorAndLast[T any](values []T, getString func(T) string, 
 	s := make([]string, len(values))
 
 	for i, v := range values {
-		s[i] = getString(v)	
+		s[i] = getString(v)
 	}
 
 	return JoinWithSeparatorAndLast(s, separator, last)

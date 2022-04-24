@@ -10,7 +10,7 @@ import (
 type Crypter interface {
 	Encrypt(file string) error
 	Decrypt(file string) error
-} 
+}
 
 func LoadFromConfig(data map[string]string) (Crypter, error) {
 	if data == nil {

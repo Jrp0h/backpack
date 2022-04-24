@@ -34,14 +34,14 @@ func (action *moveAction) Upload(fileData *utils.FileData) error {
 	}
 
 	data, err := ioutil.ReadFile(fileData.Path)
-    if err != nil {
+	if err != nil {
 		return fmt.Errorf("action/move: couldn't read file %s\n%s", fileData.Path, err.Error())
-    }
+	}
 
-    err = ioutil.WriteFile(outputPath, data, 0644)
-    if err != nil {
+	err = ioutil.WriteFile(outputPath, data, 0644)
+	if err != nil {
 		return fmt.Errorf("action/move: couldn't write file %s\n%s", outputPath, err.Error())
-    }
+	}
 
 	return nil
 }
@@ -64,7 +64,7 @@ func (action *moveAction) ListFiles() ([]string, error) {
 
 func (action *moveAction) Fetch(file string) (string, error) {
 
-	outputPath := path.Join(os.TempDir(), uuid.NewString() + ".zip")
+	outputPath := path.Join(os.TempDir(), uuid.NewString()+".zip")
 	if utils.PathExists(outputPath) {
 		return "", fmt.Errorf("action/move: output path %s already exists", outputPath)
 	}
@@ -72,14 +72,14 @@ func (action *moveAction) Fetch(file string) (string, error) {
 	inputPath := path.Join(action.dir, file)
 
 	data, err := ioutil.ReadFile(inputPath)
-    if err != nil {
+	if err != nil {
 		return "", fmt.Errorf("action/move: couldn't read file %s\n%s", inputPath, err.Error())
-    }
+	}
 
-    err = ioutil.WriteFile(outputPath, data, 0644)
-    if err != nil {
+	err = ioutil.WriteFile(outputPath, data, 0644)
+	if err != nil {
 		return "", fmt.Errorf("action/move: couldn't write file %s\n%s", outputPath, err.Error())
-    }
+	}
 
 	return outputPath, nil
 }

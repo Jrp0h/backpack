@@ -8,17 +8,17 @@ import (
 
 type logger struct {
 	VerboseEnabled bool
-	DebugEnabled bool
+	DebugEnabled   bool
 }
 
 var Log = newLogger()
 
 func newLogger() logger {
 	pterm.PrintDebugMessages = true
-	
+
 	return logger{
 		VerboseEnabled: false,
-		DebugEnabled: false,
+		DebugEnabled:   false,
 	}
 }
 
@@ -51,7 +51,7 @@ func (logger *logger) FatalNoExit(format string, a ...interface{}) {
 
 func (logger *logger) Info(format string, a ...interface{}) {
 	// if logger.VerboseEnabled {
-		pterm.Info.Printfln(format, a...)
+	pterm.Info.Printfln(format, a...)
 	// }
 }
 

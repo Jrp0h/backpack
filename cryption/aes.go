@@ -15,11 +15,11 @@ import (
 	"github.com/Jrp0h/backpack/utils"
 )
 
-var validTypes = map[string]func (string) ([]byte, error){
-	"base64": keyFromBase64, 
-	"file": keyFromFile,
-	"raw": keyFromRaw,
-	"hex": keyFromHex,
+var validTypes = map[string]func(string) ([]byte, error){
+	"base64": keyFromBase64,
+	"file":   keyFromFile,
+	"raw":    keyFromRaw,
+	"hex":    keyFromHex,
 }
 
 type AESCryper struct {
@@ -27,18 +27,17 @@ type AESCryper struct {
 }
 
 func (crypter *AESCryper) Encrypt(path string) (outErr error) {
-    defer func() {
+	defer func() {
 		recErr := recover()
-        if (recErr != nil) {
-            outErr = fmt.Errorf("cryption/aes: Couldn't encrypt '%s'\n%s", path, recErr)
-        }
-    }()
+		if recErr != nil {
+			outErr = fmt.Errorf("cryption/aes: Couldn't encrypt '%s'\n%s", path, recErr)
+		}
+	}()
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return fmt.Errorf("cryption/aes: Couldn't read file '%s'\n%s", path, err.Error())
 	}
-
 
 	block, err := aes.NewCipher(crypter.key)
 	if err != nil {
@@ -67,12 +66,12 @@ func (crypter *AESCryper) Encrypt(path string) (outErr error) {
 }
 
 func (crypter *AESCryper) Decrypt(path string) (outErr error) {
-    defer func() {
+	defer func() {
 		recErr := recover()
-        if (recErr != nil) {
-            outErr = fmt.Errorf("cryption/aes: Couldn't decrypt '%s'\n%s", path, recErr)
-        }
-    }()
+		if recErr != nil {
+			outErr = fmt.Errorf("cryption/aes: Couldn't decrypt '%s'\n%s", path, recErr)
+		}
+	}()
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -84,14 +83,14 @@ func (crypter *AESCryper) Decrypt(path string) (outErr error) {
 		return fmt.Errorf("cryption/aes: Couldn't create AES cipher.\n%s", err.Error())
 	}
 
-	decrypted := make([]byte, len(data) - aes.BlockSize)
+	decrypted := make([]byte, len(data)-aes.BlockSize)
 	iv := data[:aes.BlockSize]
 
 	bm := cipher.NewCBCDecrypter(block, iv)
 	bm.CryptBlocks(decrypted, data[aes.BlockSize:])
-	
-	paddingToRemove := decrypted[len(decrypted) - 1]
-	decrypted = decrypted[:len(decrypted) - int(paddingToRemove)]
+
+	paddingToRemove := decrypted[len(decrypted)-1]
+	decrypted = decrypted[:len(decrypted)-int(paddingToRemove)]
 
 	if err = ioutil.WriteFile(path, decrypted, 0644); err != nil {
 		return fmt.Errorf("cryption/aes: Couldn't write file '%s'\n%s", path, err.Error())
@@ -109,17 +108,16 @@ func loadAES(data *map[string]string) (Crypter, error) {
 
 	var key []byte
 
-
 	keyFound := false
 	for k, v := range validTypes {
-		if strings.HasPrefix(keyFromConfig, k + ":") {
+		if strings.HasPrefix(keyFromConfig, k+":") {
 			keyFound = true
 
-			key, err = v(strings.Replace(keyFromConfig, k + ":", "", 1))
+			key, err = v(strings.Replace(keyFromConfig, k+":", "", 1))
 			if err != nil {
 				return nil, err
 			}
-		}	
+		}
 	}
 
 	if !keyFound {

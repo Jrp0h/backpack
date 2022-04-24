@@ -15,7 +15,6 @@ func FormatDate(format string, t time.Time) string {
 	result = strings.ReplaceAll(result, "%M", pad2(t.Minute()))
 	result = strings.ReplaceAll(result, "%S", pad2(t.Second()))
 
-
 	return result
 }
 

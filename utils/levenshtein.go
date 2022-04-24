@@ -42,9 +42,9 @@ func ld(s, t string, ignoreCase bool) int {
 }
 
 type LevenshteinResult struct {
-	Text string
+	Text     string
 	Distance int
-} 
+}
 
 type LevenshteinResults []LevenshteinResult
 
@@ -57,13 +57,13 @@ func Levenshtein(needle string, haystack []string, ignoreCase bool) LevenshteinR
 	for _, text := range haystack {
 		distance := ld(needle, text, ignoreCase)
 		result := LevenshteinResult{
-			Text: text,
+			Text:     text,
 			Distance: distance,
 		}
 
 		Log.Debug("utils/levenshtein: %s has a distance of %d to %s", needle, result.Distance, text)
 
-		switch  {
+		switch {
 		case distance < lowest:
 			values = make([]LevenshteinResult, 1)
 			values[0] = result
@@ -79,13 +79,13 @@ func Levenshtein(needle string, haystack []string, ignoreCase bool) LevenshteinR
 }
 
 func (l LevenshteinResults) AsStatement() string {
-	return JoinSliceAsSentanceStatement(l, func (r LevenshteinResult) string {
+	return JoinSliceAsSentanceStatement(l, func(r LevenshteinResult) string {
 		return r.Text
 	})
 }
 
 func (l LevenshteinResults) AsQuestion() string {
-	return JoinSliceAsSentanceQuestion(l, func (r LevenshteinResult) string {
+	return JoinSliceAsSentanceQuestion(l, func(r LevenshteinResult) string {
 		return r.Text
 	})
 }

@@ -10,9 +10,8 @@ import (
 
 type actionsConfig map[string]action.Action
 
-
 func loadActions(config *configFile) (actionsConfig, error) {
-	actions := make(map[string]action.Action) 
+	actions := make(map[string]action.Action)
 
 	for k, v := range config.Actions {
 		k = strings.ToLower(k)
@@ -33,7 +32,7 @@ func loadActions(config *configFile) (actionsConfig, error) {
 }
 
 func (actions *actionsConfig) Only(names []string) (actionsConfig, error) {
-	only := make(map[string]action.Action) 
+	only := make(map[string]action.Action)
 
 	for _, name := range names {
 		name = strings.ToLower(name)

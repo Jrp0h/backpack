@@ -10,7 +10,7 @@ func PathExists(path string) bool {
 	return false
 }
 
-func PathIsFile(path string) bool  {
+func PathIsFile(path string) bool {
 	if f, err := os.Stat(path); err == nil {
 		return !f.IsDir()
 	}
@@ -18,7 +18,7 @@ func PathIsFile(path string) bool  {
 	return false
 }
 
-func PathIsDir(path string) bool  {
+func PathIsDir(path string) bool {
 	if f, err := os.Stat(path); err == nil {
 		return f.IsDir()
 	}
