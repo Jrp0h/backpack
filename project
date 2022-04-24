@@ -21,8 +21,7 @@ function configure() {
         echo "pre-commit successfully installed"
     fi
 
-
-    pre-commit install
+    pre-commit install || fail "Failed to activate pre-commit"
 }
 
 function newRelease() {
