@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha512"
 	"encoding/hex"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"sync"
@@ -12,6 +13,7 @@ import (
 	"github.com/Jrp0h/backpack/config"
 	"github.com/Jrp0h/backpack/utils"
 	"github.com/Jrp0h/backpack/zip"
+	"github.com/manifoldco/promptui"
 	"github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
@@ -93,7 +95,17 @@ func handleEncrypt(cfg *config.Config, path string) error {
 	}
 
 	if !cfg.Crypto.Enabled {
-		// TODO: Wait for user input
+		p := promptui.Prompt{
+			Label:     "Encryption isn't set. Are you sure you want to continue?",
+			IsConfirm: true,
+		}
+
+		_, err := p.Run()
+
+		if err != nil {
+			return fmt.Errorf("cmd/backup: User stop because encryption settings isn't set.")
+		}
+
 		utils.Log.Info("Encryption Settings isn't set. Skipping encryption.")
 		return nil
 	}

@@ -1,9 +1,9 @@
 data_path: test
 hash_path: prev_hash
 
-encryption:
-    type: aes
-    key: raw:thisis32bitlongpassphraseimusing
+# encryption:
+#    type: aes
+#    key: raw:thisis32bitlongpassphraseimusing
     # key: file:test/key.txt
     # key: base64:dGhpc2lzMzJiaXRsb25ncGFzc3BocmFzZWltdXNpbmc=
 
