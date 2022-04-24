@@ -1,0 +1,57 @@
+#!/usr/bin/bash
+
+function fail() {
+    echo "$1"
+    exit 1
+}
+
+function configure() {
+    which golangci-lint >/dev/null 2>/dev/null
+
+    if [ $? -ne 0 ]; then 
+        echo "golangci-lint isn't installed. Installing"
+        go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.45.2 || fail "Failed to install golangci-lint"
+        echo "golangci-lint successfully installed"
+    fi
+
+    which pre-commit >/dev/null 2>/dev/null
+    if [ $? -ne 0 ]; then 
+        echo "pre-commit isn't installed. Installing"
+        pip3 install pre-commit || fail "Failed to install pre-commit"
+        echo "pre-commit successfully installed"
+    fi
+
+
+    pre-commit install
+}
+
+function newRelease() {
+    [ "$1" != "" ] || fail "Missing version. Usage: $0 version [version eg. 1.0]"
+    [ "$(git diff --name-only)" != "" ] || fail "Commit isn't empty. Please commit before creating version"
+
+    sed "s/version *= *\".*\"/version = \""$1"\"/g" cmd/version.go > cmd/version.go.tmp
+    rm cmd/version.go
+    mv cmd/version.go.tmp cmd/version.go
+    git add cmd/version.go
+
+    git commit -m "v$1" --allow-empty || fail "Failed to create empty commit"
+    git tag "v$1" || fail "Failed to create tag"
+    git push origin master --tags || fail "Failed to push tag"
+}
+
+case "$1" in
+    new-release)
+        newRelease "$2" ;;
+    configure)
+        configure ;;
+    *)
+        echo "Unknown command $1"
+        echo "Usage:"
+        echo "  $0 configure"
+        echo "      to configure pre-commit."
+        echo ""
+        echo "  $0 new-release [version eg. 1.0]"
+        echo "      to create new release."
+        exit 1
+        ;;
+esac

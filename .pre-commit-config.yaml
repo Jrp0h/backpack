@@ -1,0 +1,24 @@
+repos:
+  - repo: local
+    hooks:
+      - id: format
+        name: Formatting to ensure changes will pass format on CI
+        entry: bash pre-commit/format.sh
+        stages: [commit]
+        language: system
+        files: .go$
+
+      - id: tidy
+        name: Tidying go.mod to ensure changes will pass tidy on CI
+        entry: bash pre-commit/tidy.sh
+        stages: [commit]
+        pass_filenames: false
+        language: system
+        files: ^go.mod$
+
+      - id: linting
+        name: Linting to ensure changes will pass linting on CI
+        entry: bash pre-commit/lint.sh
+        pass_filenames: false
+        stages: [commit]
+        language: system
