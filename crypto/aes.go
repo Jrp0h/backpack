@@ -1,4 +1,4 @@
-package cryption
+package crypto
 
 import (
 	"bytes"
@@ -22,26 +22,26 @@ var validTypes = map[string]func(string) ([]byte, error){
 	"hex":    keyFromHex,
 }
 
-type AESCryper struct {
+type AESCrypo struct {
 	key []byte
 }
 
-func (crypter *AESCryper) Encrypt(path string) (outErr error) {
+func (crypter *AESCrypo) Encrypt(path string) (outErr error) {
 	defer func() {
 		recErr := recover()
 		if recErr != nil {
-			outErr = fmt.Errorf("cryption/aes: Couldn't encrypt '%s'\n%s", path, recErr)
+			outErr = fmt.Errorf("crypto/aes: Couldn't encrypt '%s'\n%s", path, recErr)
 		}
 	}()
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return fmt.Errorf("cryption/aes: Couldn't read file '%s'\n%s", path, err.Error())
+		return fmt.Errorf("crypto/aes: Couldn't read file '%s'\n%s", path, err.Error())
 	}
 
 	block, err := aes.NewCipher(crypter.key)
 	if err != nil {
-		return fmt.Errorf("cryption/aes: Couldn't create AES cipher.\n%s", err.Error())
+		return fmt.Errorf("crypto/aes: Couldn't create AES cipher.\n%s", err.Error())
 	}
 
 	data, err = pkcs7Pad(data, block.BlockSize())
@@ -52,35 +52,35 @@ func (crypter *AESCryper) Encrypt(path string) (outErr error) {
 	ciphertext := make([]byte, aes.BlockSize+len(data))
 	iv := ciphertext[:aes.BlockSize]
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return fmt.Errorf("cryption/aes: Couldn't initialize iv.\n%s", err.Error())
+		return fmt.Errorf("crypto/aes: Couldn't initialize iv.\n%s", err.Error())
 	}
 
 	bm := cipher.NewCBCEncrypter(block, iv)
 	bm.CryptBlocks(ciphertext[aes.BlockSize:], data)
 
 	if err = ioutil.WriteFile(path, ciphertext, 0644); err != nil {
-		return fmt.Errorf("cryption/aes: Couldn't write file '%s'\n%s", path, err.Error())
+		return fmt.Errorf("crypto/aes: Couldn't write file '%s'\n%s", path, err.Error())
 	}
 
 	return nil
 }
 
-func (crypter *AESCryper) Decrypt(path string) (outErr error) {
+func (crypter *AESCrypo) Decrypt(path string) (outErr error) {
 	defer func() {
 		recErr := recover()
 		if recErr != nil {
-			outErr = fmt.Errorf("cryption/aes: Couldn't decrypt '%s'\n%s", path, recErr)
+			outErr = fmt.Errorf("crypto/aes: Couldn't decrypt '%s'\n%s", path, recErr)
 		}
 	}()
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return fmt.Errorf("cryption/aes: Couldn't read file '%s'\n%s", path, err.Error())
+		return fmt.Errorf("crypto/aes: Couldn't read file '%s'\n%s", path, err.Error())
 	}
 
 	block, err := aes.NewCipher(crypter.key)
 	if err != nil {
-		return fmt.Errorf("cryption/aes: Couldn't create AES cipher.\n%s", err.Error())
+		return fmt.Errorf("crypto/aes: Couldn't create AES cipher.\n%s", err.Error())
 	}
 
 	decrypted := make([]byte, len(data)-aes.BlockSize)
@@ -93,14 +93,14 @@ func (crypter *AESCryper) Decrypt(path string) (outErr error) {
 	decrypted = decrypted[:len(decrypted)-int(paddingToRemove)]
 
 	if err = ioutil.WriteFile(path, decrypted, 0644); err != nil {
-		return fmt.Errorf("cryption/aes: Couldn't write file '%s'\n%s", path, err.Error())
+		return fmt.Errorf("crypto/aes: Couldn't write file '%s'\n%s", path, err.Error())
 	}
 
 	return nil
 }
 
-func loadAES(data *map[string]string) (Crypter, error) {
-	keyFromConfig, err := utils.ValueOrErrorString(data, "key", "cryption/aes")
+func loadAES(data *map[string]string) (Crypto, error) {
+	keyFromConfig, err := utils.ValueOrErrorString(data, "key", "crypto/aes")
 
 	if err != nil {
 		return nil, err
@@ -121,15 +121,15 @@ func loadAES(data *map[string]string) (Crypter, error) {
 	}
 
 	if !keyFound {
-		return nil, fmt.Errorf("cryption/aes: Invalid key type '%s'", strings.Split(keyFromConfig, ":")[0])
+		return nil, fmt.Errorf("crypto/aes: Invalid key type '%s'", strings.Split(keyFromConfig, ":")[0])
 	}
 
 	if len(key) != 32 && len(key) != 24 && len(key) != 16 {
-		return nil, fmt.Errorf("cryption/aes: Invalid key size '%d'", len(key))
+		return nil, fmt.Errorf("crypto/aes: Invalid key size '%d'", len(key))
 	}
-	utils.Log.Debug("cryption/aes: Key size is %dbit", len(key))
+	utils.Log.Debug("crypto/aes: Key size is %dbit", len(key))
 
-	return &AESCryper{
+	return &AESCrypo{
 		key,
 	}, nil
 }
@@ -137,7 +137,7 @@ func loadAES(data *map[string]string) (Crypter, error) {
 func keyFromBase64(key string) ([]byte, error) {
 	decoded, err := base64.StdEncoding.DecodeString(key)
 	if err != nil {
-		return nil, fmt.Errorf("cryption/aes: Invalid base64 key")
+		return nil, fmt.Errorf("crypto/aes: Invalid base64 key")
 	}
 
 	return decoded, nil
@@ -146,7 +146,7 @@ func keyFromBase64(key string) ([]byte, error) {
 func keyFromFile(path string) ([]byte, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("cryption/aes: Couldn't open key file.\n'%s'", path)
+		return nil, fmt.Errorf("crypto/aes: Couldn't open key file.\n'%s'", path)
 	}
 
 	return data, nil
@@ -159,7 +159,7 @@ func keyFromRaw(key string) ([]byte, error) {
 func keyFromHex(key string) ([]byte, error) {
 	decoded, err := hex.DecodeString(key)
 	if err != nil {
-		return nil, fmt.Errorf("cryption/aes: Invalid hex key")
+		return nil, fmt.Errorf("crypto/aes: Invalid hex key")
 	}
 
 	return decoded, nil
@@ -168,11 +168,11 @@ func keyFromHex(key string) ([]byte, error) {
 // Function taken from https://stackoverflow.com/questions/66221371/encrypt-aes-string-with-go-and-decrypt-with-crypto-js
 func pkcs7Pad(b []byte, blocksize int) ([]byte, error) {
 	if blocksize <= 0 {
-		return nil, fmt.Errorf("cryption/aes: Invalid blocksize")
+		return nil, fmt.Errorf("crypto/aes: Invalid blocksize")
 	}
 
 	if len(b) == 0 {
-		return nil, fmt.Errorf("cryption/aes: Invalid PKCS7 data (empty or not padded)")
+		return nil, fmt.Errorf("crypto/aes: Invalid PKCS7 data (empty or not padded)")
 	}
 
 	n := blocksize - (len(b) % blocksize) // size

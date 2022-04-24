@@ -92,13 +92,13 @@ func handleEncrypt(cfg *config.Config, path string) error {
 		return nil
 	}
 
-	if !cfg.Cryption.Enabled {
+	if !cfg.Crypto.Enabled {
 		// TODO: Wait for user input
 		utils.Log.Info("Encryption Settings isn't set. Skipping encryption.")
 		return nil
 	}
 
-	return cfg.Cryption.Crypter.Encrypt(path)
+	return cfg.Crypto.Crypter.Encrypt(path)
 }
 
 func runAction(file *utils.FileData, actionName string, action action.Action, p *pterm.ProgressbarPrinter, succeded *int, wg *sync.WaitGroup, m *sync.Mutex) {

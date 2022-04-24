@@ -14,8 +14,8 @@ type Config struct {
 	Hash string
 	CWD  string
 
-	Actions  actionsConfig
-	Cryption cryptionConfig
+	Actions actionsConfig
+	Crypto  cryptoConfig
 }
 
 const (
@@ -24,7 +24,7 @@ const (
 	CWD
 
 	Actions
-	Cryption
+	Crypto
 )
 
 func (c *Config) Require(fields int) {
@@ -46,8 +46,8 @@ func (c *Config) Require(fields int) {
 		}
 	}
 
-	if fields&Cryption != 0 {
-		if !c.Cryption.Enabled {
+	if fields&Crypto != 0 {
+		if !c.Crypto.Enabled {
 			utils.Log.Fatal("config/config: encryption is required")
 		}
 	}
@@ -102,7 +102,7 @@ func LoadConfig(cfgPath string) (*Config, error) {
 		return nil, err
 	}
 
-	cryption, err := loadCryption(config)
+	crypto, err := loadCrypto(config)
 	if err != nil {
 		return nil, err
 	}
@@ -117,8 +117,8 @@ func LoadConfig(cfgPath string) (*Config, error) {
 		Hash: config.Hash,
 		CWD:  config.CWD,
 
-		Actions:  actions,
-		Cryption: cryption,
+		Actions: actions,
+		Crypto:  crypto,
 	}, nil
 }
 

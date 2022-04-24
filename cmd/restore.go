@@ -1,7 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
@@ -15,7 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// restoreCmd represents the restore command
 var (
 	rNoBackup bool
 
@@ -96,12 +91,12 @@ func handleDecrypt(cfg *config.Config, path string) error {
 		return nil
 	}
 
-	if !cfg.Cryption.Enabled {
+	if !cfg.Crypto.Enabled {
 		utils.Log.Info("Encryption Settings isn't set. Skipping decryption.")
 		return nil
 	}
 
-	return cfg.Cryption.Crypter.Decrypt(path)
+	return cfg.Crypto.Crypter.Decrypt(path)
 }
 
 func init() {
