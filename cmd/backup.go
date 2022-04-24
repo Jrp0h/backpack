@@ -35,6 +35,9 @@ func init() {
 	backupCmd.Flags().StringArrayVar(&only, "only", []string{}, "List of connections to try.")
 	backupCmd.Flags().StringArrayVar(&except, "except", []string{}, "List of connections to ignore.")
 
+	backupCmd.Flags().StringVarP(&cfgPath, "config", "c", "", "Path to config file.")
+	backupCmd.MarkFlagRequired("config")
+
 	rootCmd.AddCommand(backupCmd)
 }
 
@@ -128,7 +131,7 @@ func backup(cfg *config.Config) bool {
 
 	// Hash
 	// FIXME: Can't restore because data hasn't changed since last backup
-	err, shouldContinue := handleHash(cfg, file.Path) 
+	err, shouldContinue := handleHash(cfg, file.Path)
 	if err != nil {
 		utils.Log.FatalNoExit(err.Error())
 		return false

@@ -33,7 +33,6 @@ var (
 				}
 			}
 
-
 			var action action.Action
 			var file string
 
@@ -47,8 +46,8 @@ var (
 				_, result, err := actionPrompt.Run()
 				utils.AbortIfError(err)
 
-				action = cfg.Actions[result]	
-				files, err := action.ListFiles();
+				action = cfg.Actions[result]
+				files, err := action.ListFiles()
 				utils.AbortIfError(err)
 
 				if len(files) == 0 {
@@ -114,4 +113,7 @@ func init() {
 
 	restoreCmd.Flags().StringArrayVar(&only, "only", []string{}, "List of connections to try.")
 	restoreCmd.Flags().StringArrayVar(&except, "except", []string{}, "List of connections to ignore.")
+
+	restoreCmd.Flags().StringVarP(&cfgPath, "config", "c", "", "Path to config file.")
+	restoreCmd.MarkFlagRequired("config")
 }

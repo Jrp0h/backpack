@@ -11,8 +11,8 @@ import (
 
 var (
 	testConnectionsCmd = &cobra.Command{
-		Use:   "test-connections",
-		Short: "Test connections",
+		Use:     "test-connections",
+		Short:   "Test connections",
 		Aliases: []string{"tc"},
 
 		Run: execWithConfig(func(cmd *cobra.Command, args []string, cfg *config.Config) {
@@ -66,4 +66,7 @@ func init() {
 
 	testConnectionsCmd.Flags().StringArrayVar(&only, "only", []string{}, "List of connections to try.")
 	testConnectionsCmd.Flags().StringArrayVar(&except, "except", []string{}, "List of connections to ignore.")
+
+	testConnectionsCmd.Flags().StringVarP(&cfgPath, "config", "c", "", "Path to config file.")
+	testConnectionsCmd.MarkFlagRequired("config")
 }
