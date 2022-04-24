@@ -35,8 +35,6 @@ func Execute() {
 
 func init() {
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
-	rootCmd.Flags().StringVarP(&cfgPath, "config", "c", "", "Path to config file.")
-	rootCmd.MarkPersistentFlagRequired("config")
 
 	rootCmd.PersistentFlags().BoolVar(&debugMode, "debug", false, "Enable debug mode. MAY PRINT SENSITIVE INFORMATION")
 	rootCmd.PersistentFlags().BoolVar(&verboseMode, "verbose", false, "Print more information.")

@@ -48,7 +48,9 @@ func (action *ftpAction) TestConnection() error {
 		return err
 	}
 
-	c.Quit()
+	if err = c.Quit(); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -59,7 +61,7 @@ func (action *ftpAction) Upload(fileData *utils.FileData) error {
 		return err
 	}
 
-	defer c.Quit()
+	defer func() { utils.IgnoreError(c.Quit()) }()
 
 	data, err := ioutil.ReadFile(fileData.Path)
 	if err != nil {
@@ -79,7 +81,7 @@ func (action *ftpAction) ListFiles() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer c.Quit()
+	defer func() { utils.IgnoreError(c.Quit()) }()
 
 	entries, err := c.List(action.dir)
 	if err != nil {
@@ -102,7 +104,7 @@ func (action *ftpAction) Fetch(file string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer c.Quit()
+	defer func() { utils.IgnoreError(c.Quit()) }()
 
 	err = c.ChangeDir(action.dir)
 	if err != nil {

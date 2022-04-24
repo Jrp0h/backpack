@@ -112,7 +112,10 @@ func Unzip(input, output string) (outErr error) {
 
 		if f.FileInfo().IsDir() {
 			// Make Folder
-			os.MkdirAll(fpath, f.Mode())
+			if err = os.MkdirAll(fpath, f.Mode()); err != nil {
+				return err
+			}
+
 			continue
 		}
 

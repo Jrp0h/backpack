@@ -49,7 +49,7 @@ type LevenshteinResult struct {
 type LevenshteinResults []LevenshteinResult
 
 func Levenshtein(needle string, haystack []string, ignoreCase bool) LevenshteinResults {
-	Log.Debug("utils/levenshtein: Ignoring case %b", ignoreCase)
+	Log.Debug("utils/levenshtein: Ignoring case %t", ignoreCase)
 	values := make([]LevenshteinResult, 0)
 
 	lowest := MaxInt

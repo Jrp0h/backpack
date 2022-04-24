@@ -36,7 +36,7 @@ func init() {
 	backupCmd.Flags().StringArrayVar(&except, "except", []string{}, "List of connections to ignore.")
 
 	backupCmd.Flags().StringVarP(&cfgPath, "config", "c", "", "Path to config file.")
-	backupCmd.MarkFlagRequired("config")
+	utils.IgnoreError(backupCmd.MarkFlagRequired("config"))
 
 	rootCmd.AddCommand(backupCmd)
 }

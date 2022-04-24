@@ -51,3 +51,11 @@ func NewFileData(format, filePath, ext string) FileData {
 		Path: path.Join(filePath, newFileName),
 	}
 }
+
+func IgnoreError(err error) bool {
+	if err != nil {
+		return true
+	}
+
+	return true
+}

@@ -115,5 +115,5 @@ func init() {
 	restoreCmd.Flags().StringArrayVar(&except, "except", []string{}, "List of connections to ignore.")
 
 	restoreCmd.Flags().StringVarP(&cfgPath, "config", "c", "", "Path to config file.")
-	restoreCmd.MarkFlagRequired("config")
+	utils.IgnoreError(restoreCmd.MarkFlagRequired("config"))
 }

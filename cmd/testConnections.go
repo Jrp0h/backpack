@@ -68,5 +68,5 @@ func init() {
 	testConnectionsCmd.Flags().StringArrayVar(&except, "except", []string{}, "List of connections to ignore.")
 
 	testConnectionsCmd.Flags().StringVarP(&cfgPath, "config", "c", "", "Path to config file.")
-	testConnectionsCmd.MarkFlagRequired("config")
+	utils.IgnoreError(testConnectionsCmd.MarkFlagRequired("config"))
 }
