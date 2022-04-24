@@ -9,6 +9,11 @@ What needs to be done before 1.0 release.
 - Google Cloud Storage
 - Azure Disk Storage
 
+## Config
+
+- Add `rsa` encryption.
+- Add name format.
+
 ## Bugs
 
 - `restore` command: Can't restore data when data hasn't changed since last backup. Only occurs when `--no-backup` flag is set to `false` or absent.
