@@ -5,6 +5,7 @@ import (
 
 	"github.com/Jrp0h/backpack/action"
 	"github.com/Jrp0h/backpack/config"
+	"github.com/Jrp0h/backpack/handlers"
 	"github.com/Jrp0h/backpack/utils"
 	"github.com/Jrp0h/backpack/zip"
 	"github.com/manifoldco/promptui"
@@ -22,9 +23,18 @@ var (
 			cfg.Cd()
 
 			if !rNoBackup {
-				if !backup(cfg) {
-					utils.Log.Info("Backup stopped. Stopping")
-					return
+				res, err := handlers.HandleBackup(cfg, handlers.BackupFlags{
+					Only:      only,
+					Except:    except,
+					Force:     force,
+					NoEncrypt: noEncrypt,
+				})
+				if err != nil {
+					utils.Log.Fatal("Backup failed. %s", err.Error())
+				}
+
+				if res == handlers.BACKUP_NO_ACTIONS {
+					utils.Log.Fatal("No actions found. Stopping")
 				}
 			}
 

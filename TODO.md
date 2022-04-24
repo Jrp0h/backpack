@@ -14,11 +14,6 @@ What needs to be done before 1.0 release.
 - Add `rsa` encryption.
 - Add name format.
 
-## Bugs
-
-- `restore` command: Can't restore data when data hasn't changed since last backup. Only occurs when `--no-backup` flag is set to `false` or absent.
-- `backup` command: Don't write new hash to file until backup has succeded.
-
 ## Nice to have
 
 - More consistent error messages.

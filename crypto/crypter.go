@@ -14,7 +14,7 @@ type Crypto interface {
 
 func LoadFromConfig(data map[string]string) (Crypto, error) {
 	if data == nil {
-		utils.Log.Debug("crypto/crypto: Data is nil")
+		utils.Log.Debug("crypto/crypto: Config data is nil")
 		return nil, nil
 	}
 
