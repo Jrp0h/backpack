@@ -12,7 +12,7 @@ var (
 
 	versionCmd = &cobra.Command{
 		Use:   "version",
-		Short: "Show version",
+		Short: fmt.Sprintf("Show version. backpack version %s %s/%s", version, runtime.GOOS, runtime.GOARCH),
 
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Printf("backpack version %s %s/%s\n", version, runtime.GOOS, runtime.GOARCH)
