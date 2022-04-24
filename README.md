@@ -12,21 +12,25 @@ Supported storages:
 
 Usage: `backpack <command> [args] [flags]`
 
-All commands require the `--config` flag and must be a path to the config file.
+Flags:
+
+| Flag    | Type | Description    | Required | Default |
+| ------- | ---- | -------------- | -------- | ------- |
+| version | bool | Print version. | false    | false   |
 
 Global Flags (all commands has these):
 
-| Flag      | Type   | Description                                         | Required | Default    |
-| --------- | ------ | --------------------------------------------------- | -------- | ---------- |
-| c, config | string | Path to config file                                 | true     | no default |
-| debug     | bool   | Enable debug mode. MAY PRINT SENSITIVE INFORMATION. | false    | false      |
-| h, help   | bool   | Displays help                                       | false    | false      |
+| Flag    | Type | Description                                         | Required | Default |
+| ------- | ---- | --------------------------------------------------- | -------- | ------- |
+| debug   | bool | Enable debug mode. MAY PRINT SENSITIVE INFORMATION. | false    | false   |
+| h, help | bool | Displays help                                       | false    | false   |
 
 Commands:
 
 - [backup](#backup)
 - [restore](#restore)
 - [test-connections](#test-connections)
+- [version](#version)
 
 ## backup
 
@@ -38,6 +42,7 @@ Flags:
 
 | Flag       | Type             | Description                                                      | Required | Default    |
 | ---------- | ---------------- | ---------------------------------------------------------------- | -------- | ---------- |
+| c, config  | string           | Path to config file                                              | true     | no default |
 | except     | array of strings | Doesn't backup to those actions. Can't be used with `--only`     | false    | no default |
 | only       | array of strings | Does only backup to those actions. Can't be used with `--except` | false    | no default |
 | force      | bool             | Backups even if data hasn't changed                              | false    | false      |
@@ -53,6 +58,7 @@ Flags:
 
 | Flag       | Type             | Description                                                                           | Required | Default    |
 | ---------- | ---------------- | ------------------------------------------------------------------------------------- | -------- | ---------- |
+| c, config  | string           | Path to config file                                                                   | true     | no default |
 | except     | array of strings | Doesn't backup to those actions. Can't be used with `--only`                          | false    | no default |
 | only       | array of strings | Does only backup to those actions. Can't be used with `--except`                      | false    | no default |
 | force      | bool             | Backups even if data hasn't changed.                                                  | false    | false      |
@@ -67,10 +73,17 @@ The test-connections command validates that all actions are able to be connected
 
 Flags:
 
-| Flag   | Type             | Description                                                              | Required | Default    |
-| ------ | ---------------- | ------------------------------------------------------------------------ | -------- | ---------- |
-| except | array of strings | Doesn't try to connect to those actions. Can't be used with `--only`     | false    | no default |
-| only   | array of strings | Does only try to connect to those actions. Can't be used with `--except` | false    | no default |
+| Flag      | Type             | Description                                                              | Required | Default    |
+| --------- | ---------------- | ------------------------------------------------------------------------ | -------- | ---------- |
+| c, config | string           | Path to config file                                                      | true     | no default |
+| except    | array of strings | Doesn't try to connect to those actions. Can't be used with `--only`     | false    | no default |
+| only      | array of strings | Does only try to connect to those actions. Can't be used with `--except` | false    | no default |
+
+## version
+
+Usage: `backpack version`
+
+The version command prints the version.
 
 # Config File
 
@@ -244,3 +257,27 @@ actions:
     type: move
     dir: /tmp
 ```
+
+# License
+
+The MIT License (MIT)
+
+Copyright © 2022 Marcus Nilsson <marcus.nilsson@genarp.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
