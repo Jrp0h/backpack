@@ -26,13 +26,15 @@ function configure() {
 
 function newRelease() {
     [ "$1" != "" ] || fail "Missing version. Usage: $0 version [version eg. 1.0]"
-    [ "$(git diff --name-only)" != "" ] || fail "Commit isn't empty. Please commit before creating version"
+    [ "$(git rev-parse --abbrev-ref HEAD)" != "master" ] || fail "You must be on master branch to create new release"
+    [ "$(git diff --name-only)" == "" ] || fail "Commit isn't empty. Please commit before creating version"
 
     sed "s/version *= *\".*\"/version = \""$1"\"/g" cmd/version.go > cmd/version.go.tmp
     rm cmd/version.go
     mv cmd/version.go.tmp cmd/version.go
     git add cmd/version.go
 
+    git checkout master
     git commit -m "v$1" --allow-empty || fail "Failed to create empty commit"
     git tag "v$1" || fail "Failed to create tag"
     git push origin master --tags || fail "Failed to push tag"
