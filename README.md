@@ -61,6 +61,8 @@ Flags:
 | c, config  | string           | Path to config file                                                                   | true     | no default |
 | except     | array of strings | Doesn't backup to those actions. Can't be used with `--only`                          | false    | no default |
 | only       | array of strings | Does only backup to those actions. Can't be used with `--except`                      | false    | no default |
+| action     | string           | Selects which action to download the data from. Avoids interactive prompt.            | false    | no default |
+| file       | string           | Selects which file to download. Avoids interactive prompt.                            | false    | no default |
 | force      | bool             | Backups even if data hasn't changed.                                                  | false    | false      |
 | no-encrypt | bool             | Doesn't encrypt data before uploading backup and doesn't decrypt data after download. | false    | false      |
 | no-backup  | bool             | Doesn't create backup before restoring                                                | false    | false      |

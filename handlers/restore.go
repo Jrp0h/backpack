@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"os"
 
 	"github.com/Jrp0h/backpack/action"
@@ -119,7 +121,7 @@ func restoreGetFileAndAction(cfg *config.Config, actionName string, file string)
 			}
 		} else {
 			alternatives := utils.Levenshtein(actionName, cfg.Actions.Names(), true).AsQuestion()
-			utils.Log.Error("No action named %s, did you mean %s?", actionName, alternatives)
+			return nil, "", errors.New(fmt.Sprintf("No action name %s, did you mean %s?", actionName, alternatives))
 		}
 	}
 
