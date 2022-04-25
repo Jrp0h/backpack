@@ -20,26 +20,27 @@ var (
 	debugMode   bool
 	verboseMode bool
 
-	rootCmd = &cobra.Command{
-		Use:   "backpack",
-		Short: "Easily backup and restore folders to and from different storages",
+	RootCmd = &cobra.Command{
+		Use:               "backpack",
+		Short:             "Easily backup and restore folders to and from different storages",
+		DisableAutoGenTag: true,
 	}
 )
 
 func Execute() {
-	err := rootCmd.Execute()
+	err := RootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
 func init() {
-	rootCmd.CompletionOptions.DisableDefaultCmd = true
+	RootCmd.CompletionOptions.DisableDefaultCmd = true
 
-	rootCmd.PersistentFlags().BoolVar(&debugMode, "debug", false, "Enable debug mode. MAY PRINT SENSITIVE INFORMATION")
-	rootCmd.PersistentFlags().BoolVar(&verboseMode, "verbose", false, "Print more information.")
+	RootCmd.PersistentFlags().BoolVar(&debugMode, "debug", false, "Enable debug mode. MAY PRINT SENSITIVE INFORMATION")
+	RootCmd.PersistentFlags().BoolVar(&verboseMode, "verbose", false, "Print more information.")
 
-	rootCmd.Version = version
+	RootCmd.Version = version
 }
 
 func execWithConfig(f func(cmd *cobra.Command, args []string, cfg *config.Config)) func(cmd *cobra.Command, args []string) {

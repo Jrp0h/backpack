@@ -35,7 +35,7 @@ var (
 )
 
 func init() {
-	rootCmd.AddCommand(restoreCmd)
+	RootCmd.AddCommand(restoreCmd)
 
 	restoreCmd.Flags().BoolVar(&rNoBackup, "no-backup", false, "Doesn't create backup")
 	restoreCmd.Flags().BoolVar(&noEncrypt, "no-encrypt", false, "Doesn't encrypt files")

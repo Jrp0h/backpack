@@ -1,0 +1,69 @@
+.nh
+.TH "BACKPACK-RESTORE" "1" "Apr 2022" "" ""
+
+.SH NAME
+.PP
+backpack-restore - Restore from uploaded file
+
+
+.SH SYNOPSIS
+.PP
+\fBbackpack restore [flags]\fP
+
+
+.SH DESCRIPTION
+.PP
+Restore from uploaded file
+
+
+.SH OPTIONS
+.PP
+\fB-a\fP, \fB--action\fP=""
+	Name of action to restore from.
+
+.PP
+\fB-c\fP, \fB--config\fP=""
+	Path to config file.
+
+.PP
+\fB--except\fP=[]
+	List of connections to ignore.
+
+.PP
+\fB-f\fP, \fB--file\fP=""
+	Name of file to restore from
+
+.PP
+\fB--force\fP[=false]
+	Force backup even if prev_hash is the same
+
+.PP
+\fB-h\fP, \fB--help\fP[=false]
+	help for restore
+
+.PP
+\fB--no-backup\fP[=false]
+	Doesn't create backup
+
+.PP
+\fB--no-encrypt\fP[=false]
+	Doesn't encrypt files
+
+.PP
+\fB--only\fP=[]
+	List of connections to try.
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+.PP
+\fB--debug\fP[=false]
+	Enable debug mode. MAY PRINT SENSITIVE INFORMATION
+
+.PP
+\fB--verbose\fP[=false]
+	Print more information.
+
+
+.SH SEE ALSO
+.PP
+\fBbackpack(1)\fP

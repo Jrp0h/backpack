@@ -62,7 +62,7 @@ var (
 )
 
 func init() {
-	rootCmd.AddCommand(testConnectionsCmd)
+	RootCmd.AddCommand(testConnectionsCmd)
 
 	testConnectionsCmd.Flags().StringArrayVar(&only, "only", []string{}, "List of connections to try.")
 	testConnectionsCmd.Flags().StringArrayVar(&except, "except", []string{}, "List of connections to ignore.")

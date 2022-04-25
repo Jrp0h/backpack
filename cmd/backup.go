@@ -40,5 +40,5 @@ func init() {
 	backupCmd.Flags().StringVarP(&cfgPath, "config", "c", "", "Path to config file.")
 	utils.IgnoreError(backupCmd.MarkFlagRequired("config"))
 
-	rootCmd.AddCommand(backupCmd)
+	RootCmd.AddCommand(backupCmd)
 }

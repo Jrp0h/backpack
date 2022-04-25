@@ -40,9 +40,28 @@ function newRelease() {
     git push origin master --tags || fail "Failed to push tag"
 }
 
+function genDocs ()
+{
+    mv main.go main.go.tmp
+    mv docs/gen_docs.go gen_docs.go
+
+    rm -rf docs/md/* docs/man/*
+    mkdir docs/{md,man}
+
+    go run gen_docs.go
+    res="$?"
+
+    mv main.go.tmp main.go
+    mv gen_docs.go docs/gen_docs.go
+
+    exit $res
+}
+
 case "$1" in
     new-release)
         newRelease "$2" ;;
+    gen-docs)
+        genDocs ;;
     configure)
         configure ;;
     *)
@@ -50,6 +69,9 @@ case "$1" in
         echo "Usage:"
         echo "  $0 configure"
         echo "      to configure pre-commit."
+        echo ""
+        echo "  $0 gen-docs"
+        echo "      to generate documentation."
         echo ""
         echo "  $0 new-release [version eg. 1.0]"
         echo "      to create new release."
