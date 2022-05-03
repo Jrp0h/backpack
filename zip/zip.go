@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -87,6 +88,18 @@ func Zip(input, output string) (outErr error) {
 
 	writer := zip.NewWriter(f)
 	defer writer.Close()
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	if !utils.PathExists(path.Join(cwd, input)) {
+		input, err = filepath.Rel(cwd, input)
+		if err != nil {
+			return err
+		}
+	}
 
 	return walkDir(input, writer, true)
 }
