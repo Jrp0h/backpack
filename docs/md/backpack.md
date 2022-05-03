@@ -1,5 +1,5 @@
 ---
-date: 2022-04-25T16:27:37+02:00
+date: 2022-05-03T13:59:25+02:00
 title: "backpack"
 slug: backpack
 url: /commands/backpack/
@@ -21,5 +21,6 @@ Easily backup and restore folders to and from different storages
 * [backpack backup](/commands/backpack_backup/)	 - Zip, Encrypt and Store files
 * [backpack restore](/commands/backpack_restore/)	 - Restore from uploaded file
 * [backpack test-connections](/commands/backpack_test-connections/)	 - Test connections
-* [backpack version](/commands/backpack_version/)	 - Show version. backpack version 1.0-dev linux/amd64
+* [backpack test-format](/commands/backpack_test-format/)	 - Test format
+* [backpack version](/commands/backpack_version/)	 - Show version. backpack version 1.0-dev.1 linux/amd64
 

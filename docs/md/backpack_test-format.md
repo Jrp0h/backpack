@@ -1,21 +1,22 @@
 ---
 date: 2022-05-03T13:59:25+02:00
-title: "backpack version"
-slug: backpack_version
-url: /commands/backpack_version/
+title: "backpack test-format"
+slug: backpack_test-format
+url: /commands/backpack_test-format/
 ---
-## backpack version
+## backpack test-format
 
-Show version. backpack version 1.0-dev.1 linux/amd64
+Test format
 
 ```
-backpack version [flags]
+backpack test-format [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for version
+  -c, --config string   Path to config file.
+  -h, --help            help for test-format
 ```
 
 ### Options inherited from parent commands
