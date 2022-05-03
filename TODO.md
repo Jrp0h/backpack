@@ -8,14 +8,20 @@ What needs to be done before 1.0 release.
 - Google Drive
 - Google Cloud Storage
 - Azure Disk Storage
+- backblaze B2
+
+## Bugs
+
+- Can't zip data when using absolute paths. Potential fix: Strip all directories and only keep the deepest one.
+- Hash fails if prev_hash file has newline
 
 ## Config
 
 - Add `rsa` encryption.
-- Add name format.
 
 ## Nice to have
 
 - More consistent error messages.
 - `move` action: Verify that the user has premissions to store data at the specified location.
 - `s3` action: Be able to test connection.
+- Updates on what's going on
