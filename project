@@ -34,8 +34,10 @@ function newRelease() {
     mv cmd/version.go.tmp cmd/version.go
     git add cmd/version.go
 
-    git checkout master
-    git commit -m "v$1" --allow-empty || fail "Failed to create empty commit"
+    genDocs || fail "Failed to generate docs"
+    git add docs/*
+
+    git commit -m "v$1" || fail "Failed to create commit"
     git tag "v$1" || fail "Failed to create tag"
     git push origin master --tags || fail "Failed to push tag"
 }
@@ -46,22 +48,26 @@ function genDocs ()
     mv docs/gen_docs.go gen_docs.go
 
     rm -rf docs/md/* docs/man/*
-    mkdir docs/{md,man}
+    mkdir -p docs/{md,man}
 
     go run gen_docs.go
-    res="$?"
+    res=$?
 
     mv main.go.tmp main.go
     mv gen_docs.go docs/gen_docs.go
 
-    exit $res
+    return $res
 }
 
 case "$1" in
     new-release)
+        genDocs
         newRelease "$2" ;;
+
     gen-docs)
-        genDocs ;;
+      res=$((genDocs))
+      exit $res
+      ;;
     configure)
         configure ;;
     *)
