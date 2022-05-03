@@ -30,6 +30,7 @@ Commands:
 - [backup](#backup)
 - [restore](#restore)
 - [test-connections](#test-connections)
+- [test-format](#test-format)
 - [version](#version)
 
 ## backup
@@ -81,6 +82,18 @@ Flags:
 | except    | array of strings | Doesn't try to connect to those actions. Can't be used with `--only`     | false    | no default |
 | only      | array of strings | Does only try to connect to those actions. Can't be used with `--except` | false    | no default |
 
+## test-format
+
+Usage: `backpack test-format --config <path to config>`
+
+The test-format command prints the formatted file name using the current time. This is so that you can validate that the format is what you expect.
+
+Flags:
+
+| Flag      | Type             | Description                                                              | Required | Default    |
+| --------- | ---------------- | ------------------------------------------------------------------------ | -------- | ---------- |
+| c, config | string           | Path to config file                                                      | true     | no default |
+
 ## version
 
 Usage: `backpack version`
@@ -97,9 +110,32 @@ The config file is a yml file with all the information to be able to store and f
 | ---------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | data_path  | string | Path to the folder that will be backed up or replaced when restoring                                                                                                         | true     |
 | hash_path  | string | Path to a file containing the sha512 hash from the last backup. This is to prevent duplicate backups.                                                                        | true     |
+| file_name_format  | string | Format of the file name used when backing up. Read section [File Name Format](#file-name-format)                                                                       | false     |
 | cwd        | string | If defined then the program will move into that folder making relative path relative to cwd. (`--config` flag will still be relative to where the program was executed from) | false    |
 | encryption | map    | Information about encryption data. Read section [Encryption](#encryption)                                                                                                    | false    |
 | actions    | map    | List of different storages to backup to. Read section [Actions](#actions)                                                                                                    | true     |
+
+### File Name Format
+
+Format of the name to use when backing up. It has support for all datetime formats that golang offers aswell as some custom.
+Default is `%Y-%m-%d_%H%M%S`. You can add more information if you want, like `prod_db_%Y-%m-%d_%H%M%S`.
+
+#### Custom formats
+
+| Code | Description | Golang Equivelent |
+| ---- | ----------- | ----------------- |
+| %a   | The abbreviated weekday name. | Mon |
+| %A   | The full weekday name. | Monday |
+| %d   | Day of the month (01 to 31). | 02 |
+| %b   | The abbreviated month name. | Jan |
+| %B   | The full month name. | January |
+| %m   | Month of the year (01 to 12). | 01 |
+| %Y   | Year with century. | 2006 |
+| %y   | Year without a century. | 06 |
+| %H   | Hour of the day (00 to 23). | 15 |
+| %M   | Minute of the hour (00 to 59). | 04 |
+| %S   | Seconds of the minute (00 to 60). | 05 |
+| %Z   | Time zone name. | MST |
 
 ### Encryption
 
@@ -235,6 +271,7 @@ actions:
 data_path: database/data
 prev_hash: ./prev_hash
 cwd: /home/user1/mywebsite # remove this if you want cwd to be where you executed the program
+file_name_format: 'prod_database_%Y-%m-%d_%H%M' # remove this if you want the default of '%Y-%m-%d_%H%M%S'
 
 encryption: # Remove this if you don't want encryption
   type: aes

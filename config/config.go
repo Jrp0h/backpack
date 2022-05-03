@@ -10,9 +10,10 @@ import (
 )
 
 type Config struct {
-	Path string
-	Hash string
-	CWD  string
+	Path           string
+	Hash           string
+	CWD            string
+	FileNameFormat string
 
 	Actions actionsConfig
 	Crypto  cryptoConfig
@@ -88,9 +89,10 @@ func checkStringField(name, value string) {
 }
 
 type configFile struct {
-	Path string `yaml:"data_path"`
-	Hash string `yaml:"hash_path"`
-	CWD  string `yaml:"cwd"`
+	Path           string `yaml:"data_path"`
+	Hash           string `yaml:"hash_path"`
+	CWD            string `yaml:"cwd"`
+	FileNameFormat string `yaml:"file_name_format"`
 
 	Actions    map[string]map[string]string `yaml:"actions"`
 	Encryption map[string]string            `yaml:"encryption"`
@@ -112,10 +114,15 @@ func LoadConfig(cfgPath string) (*Config, error) {
 		return nil, err
 	}
 
+	if config.FileNameFormat == "" {
+		config.FileNameFormat = "%Y-%m-%d_%H%M%S"
+	}
+
 	return &Config{
-		Path: config.Path,
-		Hash: config.Hash,
-		CWD:  config.CWD,
+		Path:           config.Path,
+		Hash:           config.Hash,
+		CWD:            config.CWD,
+		FileNameFormat: config.FileNameFormat,
 
 		Actions: actions,
 		Crypto:  crypto,

@@ -35,7 +35,7 @@ func HandleBackup(cfg *config.Config, flags BackupFlags) (backupStatus, error) {
 	// Change Current Directory if CWD isn't empty
 	cfg.Cd()
 
-	file := utils.NewFileData("%Y-%m-%d_%H%M", os.TempDir(), "zip")
+	file := utils.NewFileData(cfg.FileNameFormat, os.TempDir(), "zip")
 
 	// Zip
 	utils.AbortIfError(zip.Zip(cfg.Path, file.Path))
