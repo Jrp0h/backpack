@@ -50,7 +50,12 @@ func HandleHash(cfg *config.Config, dataPath string, skipCompare bool) (*hashRes
 
 		prevHash, err = hex.DecodeString(string(prev))
 		if err != nil {
-			return nil, err
+			utils.Log.Warning("prev_hash is an invalid hex-string. Continuing")
+			return &hashResult{
+				cfg,
+				newHash,
+				HASH_CONTINUE,
+			}, nil
 		}
 	}
 
