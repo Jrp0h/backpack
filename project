@@ -26,7 +26,7 @@ function configure() {
 
 function newRelease() {
     [ "$1" != "" ] || fail "Missing version. Usage: $0 version [version eg. 1.0]"
-    [ "$(git rev-parse --abbrev-ref HEAD)" != "master" ] || fail "You must be on master branch to create new release"
+    [ "$(git rev-parse --abbrev-ref HEAD)" == "master" ] || fail "You must be on master branch to create new release"
     [ "$(git diff --name-only)" == "" ] || fail "Commit isn't empty. Please commit before creating version"
 
     sed "s/version *= *\".*\"/version = \""$1"\"/g" cmd/version.go > cmd/version.go.tmp
@@ -61,7 +61,6 @@ function genDocs ()
 
 case "$1" in
     new-release)
-        genDocs
         newRelease "$2" ;;
 
     gen-docs)
