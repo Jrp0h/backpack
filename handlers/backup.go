@@ -38,7 +38,12 @@ func HandleBackup(cfg *config.Config, flags BackupFlags) (backupStatus, error) {
 	file := utils.NewFileData(cfg.FileNameFormat, os.TempDir(), "zip")
 
 	// Zip
-	utils.AbortIfError(zip.Zip(cfg.Path, file.Path))
+	zipSpinner, _ := pterm.DefaultSpinner.Start("Zip: Zipping data")
+	if err := zip.Zip(cfg.Path, file.Path); err != nil {
+		zipSpinner.Fail("Zip: Failed to zip data")
+		return 0, err
+	}
+	zipSpinner.Success("Zip: Data has been successfully zipped")
 	defer os.Remove(file.Path) // Clean up
 
 	// Hash

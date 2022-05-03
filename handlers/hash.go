@@ -8,6 +8,7 @@ import (
 
 	"github.com/Jrp0h/backpack/config"
 	"github.com/Jrp0h/backpack/utils"
+	"github.com/pterm/pterm"
 )
 
 type HashStatus int
@@ -26,15 +27,20 @@ type hashResult struct {
 }
 
 func HandleHash(cfg *config.Config, dataPath string, skipCompare bool) (*hashResult, error) {
+
+	spinner, _ := pterm.DefaultSpinner.Start("Hash: Starting")
+
 	// Compute new hash
 	data, err := ioutil.ReadFile(dataPath)
 	if err != nil {
+		spinner.Fail(err)
 		return nil, err
 	}
 
 	h := sha512.New()
 	_, err = h.Write(data)
 	if err != nil {
+		spinner.Fail(err)
 		return nil, err
 	}
 	newHash := h.Sum(nil)
@@ -45,12 +51,13 @@ func HandleHash(cfg *config.Config, dataPath string, skipCompare bool) (*hashRes
 	if !skipCompare {
 		prev, err := ioutil.ReadFile(cfg.Hash)
 		if err != nil {
+			spinner.Fail(err)
 			return nil, err
 		}
 
 		prevHash, err = hex.DecodeString(string(prev))
 		if err != nil {
-			utils.Log.Warning("prev_hash is an invalid hex-string. Continuing")
+			spinner.Warning("Hash: prev_hash is an invalid hex-string. Continuing")
 			return &hashResult{
 				cfg,
 				newHash,
@@ -60,7 +67,7 @@ func HandleHash(cfg *config.Config, dataPath string, skipCompare bool) (*hashRes
 	}
 
 	if !skipCompare && bytes.Equal(newHash, prevHash) {
-		utils.Log.Info("Data hasn't changed. Skipping backup.")
+		spinner.Success("Hash: Data hasn't changed. Skipping backup.")
 		return &hashResult{
 			cfg,
 			newHash,
@@ -69,6 +76,8 @@ func HandleHash(cfg *config.Config, dataPath string, skipCompare bool) (*hashRes
 	}
 
 	utils.Log.Debug("handlers/hash: Hash return")
+
+	spinner.Success("Hash: Done")
 	return &hashResult{
 		cfg,
 		newHash,
