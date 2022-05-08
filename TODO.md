@@ -22,6 +22,6 @@ What needs to be done before 1.0 release.
 ## Nice to have
 
 - More consistent error messages.
-- `move` action: Verify that the user has premissions to store data at the specified location.
+- `move` action: Verify that the user has premissions to store data at the specified location. Allow chown and chmod.
 - `s3` action: Be able to test connection.
 - Updates on what's going on
