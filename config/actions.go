@@ -10,10 +10,10 @@ import (
 
 type actionsConfig map[string]action.Action
 
-func loadActions(config *configFile) (actionsConfig, error) {
+func loadActions(a *map[string]map[string]string) (actionsConfig, error) {
 	actions := make(map[string]action.Action)
 
-	for k, v := range config.Actions {
+	for k, v := range *a {
 		k = strings.ToLower(k)
 		action, err := action.LoadFromConfig(&v)
 		if err != nil {

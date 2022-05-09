@@ -109,7 +109,7 @@ func LoadConfig(cfgPath string) (*Config, error) {
 		return nil, err
 	}
 
-	actions, err := loadActions(config)
+	actions, err := loadActions(&config.Actions)
 	if err != nil {
 		return nil, err
 	}
